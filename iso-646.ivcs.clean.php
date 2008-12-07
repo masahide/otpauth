@@ -1,18 +1,19 @@
 <?php
 	/* **************************************************************************************
-	* FILE            : iso-646.ivcs.php
+	* FILE            : iso-646.ivcs.clean.php
 	* LAST UPDATED    : July 2007 by james.barkley@gmail.com
 	* METHOD          : include/require/inline
 	*
 	* DESCRIPTION     : This piece of code defines an ordered array called ivcs that contains
-	*                   2048 short words as defined in ISO-646.  This also defines a reverse
-	*                   table to avoid the costly array_search() function in php.
+	*                   2048 short words as defined in ISO-646, with some slight modifications 
+        *                   to ensure that dirty or innapropriate phrases don't show up.  This also 
+        *                   defines a reverse table to avoid the costly array_search() function in php.
 	*
 	* LICENSE         : GPL
 	*
 	************************************************************************************** */
 	$ivcs[] = "A";
-	$ivcs[] = "ABE";
+	$ivcs[] = "AGE"; //$ivcs[] = "ABE";
 	$ivcs[] = "ACE";
 	$ivcs[] = "ACT";
 	$ivcs[] = "AD";
@@ -25,11 +26,11 @@
 	$ivcs[] = "ALL";
 	$ivcs[] = "ALP";
 	$ivcs[] = "AM";
-	$ivcs[] = "AMY";
+	$ivcs[] = "ERR"; //$ivcs[] = "AMY";
 	$ivcs[] = "AN";
-	$ivcs[] = "ANA";
+	$ivcs[] = "ANNO"; //$ivcs[] = "ANA";
 	$ivcs[] = "AND";
-	$ivcs[] = "ANN";
+	$ivcs[] = "ANON"; //$ivcs[] = "ANN";
 	$ivcs[] = "ANT";
 	$ivcs[] = "ANY";
 	$ivcs[] = "APE";
@@ -66,7 +67,7 @@
 	$ivcs[] = "BED";
 	$ivcs[] = "BEE";
 	$ivcs[] = "BEG";
-	$ivcs[] = "BEN";
+	$ivcs[] = "BERG"; //$ivcs[] = "BEN";
 	$ivcs[] = "BET";
 	$ivcs[] = "BEY";
 	$ivcs[] = "BIB";
@@ -74,7 +75,7 @@
 	$ivcs[] = "BIG";
 	$ivcs[] = "BIN";
 	$ivcs[] = "BIT";
-	$ivcs[] = "BOB";
+	$ivcs[] = "BOA"; //$ivcs[] = "BOB";
 	$ivcs[] = "BOG";
 	$ivcs[] = "BON";
 	$ivcs[] = "BOO";
@@ -85,7 +86,7 @@
 	$ivcs[] = "BUD";
 	$ivcs[] = "BUG";
 	$ivcs[] = "BUM";
-	$ivcs[] = "BUN";
+	$ivcs[] = "BOT";//$ivcs[] = "BUN";
 	$ivcs[] = "BUS";
 	$ivcs[] = "BUT";
 	$ivcs[] = "BUY";
@@ -2061,7 +2062,7 @@
 	$ivcs[] = "YOKE";
 	$i = 0;
 	$rev_ivcs["A"] = $i++;
-	$rev_ivcs["ABE"] = $i++;
+	$rev_ivcs["AGE"] = $i++;
 	$rev_ivcs["ACE"] = $i++;
 	$rev_ivcs["ACT"] = $i++;
 	$rev_ivcs["AD"] = $i++;
@@ -2074,11 +2075,11 @@
 	$rev_ivcs["ALL"] = $i++;
 	$rev_ivcs["ALP"] = $i++;
 	$rev_ivcs["AM"] = $i++;
-	$rev_ivcs["AMY"] = $i++;
+	$rev_ivcs["ERR"] = $i++;
 	$rev_ivcs["AN"] = $i++;
-	$rev_ivcs["ANA"] = $i++;
+	$rev_ivcs["ANNO"] = $i++;
 	$rev_ivcs["AND"] = $i++;
-	$rev_ivcs["ANN"] = $i++;
+	$rev_ivcs["ANON"] = $i++;
 	$rev_ivcs["ANT"] = $i++;
 	$rev_ivcs["ANY"] = $i++;
 	$rev_ivcs["APE"] = $i++;
@@ -2115,7 +2116,7 @@
 	$rev_ivcs["BED"] = $i++;
 	$rev_ivcs["BEE"] = $i++;
 	$rev_ivcs["BEG"] = $i++;
-	$rev_ivcs["BEN"] = $i++;
+	$rev_ivcs["BERG"] = $i++;
 	$rev_ivcs["BET"] = $i++;
 	$rev_ivcs["BEY"] = $i++;
 	$rev_ivcs["BIB"] = $i++;
@@ -2123,7 +2124,7 @@
 	$rev_ivcs["BIG"] = $i++;
 	$rev_ivcs["BIN"] = $i++;
 	$rev_ivcs["BIT"] = $i++;
-	$rev_ivcs["BOB"] = $i++;
+	$rev_ivcs["BOA"] = $i++;
 	$rev_ivcs["BOG"] = $i++;
 	$rev_ivcs["BON"] = $i++;
 	$rev_ivcs["BOO"] = $i++;
@@ -2134,7 +2135,7 @@
 	$rev_ivcs["BUD"] = $i++;
 	$rev_ivcs["BUG"] = $i++;
 	$rev_ivcs["BUM"] = $i++;
-	$rev_ivcs["BUN"] = $i++;
+	$rev_ivcs["BOT"] = $i++;
 	$rev_ivcs["BUS"] = $i++;
 	$rev_ivcs["BUT"] = $i++;
 	$rev_ivcs["BUY"] = $i++;
