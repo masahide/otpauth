@@ -1,7 +1,30 @@
 <?php
-	 
-	/*  LICENSED UNDER THE GPL */
-	/************ sample code for generating an html table of one time passwords **********************/
+	/* **************************************************************************************
+	* FILE            : gen_otp_list.php
+	* LAST UPDATED    : July 2007 by james.barkley@gmail.com
+	* METHOD          : include/require/inline
+	*
+	* DESCRIPTION     : This piece of code contains a sample function for generatin an otp list
+	*
+	* LICENSE         : GPL
+	*
+	************************************************************************************** */
+	
+
+ 
+	/* **************************************************************************************
+	* FUNCTION          : generator
+	* LAST UPDATED      : 17 March 2005
+	* METHOD            : Not called directly
+	* PARAMS            : None
+	*
+	* DESCRIPTION       : sample code for generating an html table of one time passwords
+	*
+	* PRECONDITION      : none
+	*
+	* POSTCONDITION     : function prints a list of one time passwords in a very basic html table
+	*
+	************************************************************************************** */
 	$otp_list = generator();
 	 
 	print "<TABLE BORDER=1>";
