@@ -1,14 +1,14 @@
 <?php
 	/* **************************************************************************************
-	* CODE            : alphanums.php
+	* FILE            : alphanums.php
 	* LAST UPDATED    : July 2007 by james.barkley@gmail.com
 	* METHOD          : include/require/inline
 	*
 	* DESCRIPTION     : This piece of code defines an ordered array called alphanums that
-	*        contain all upper and lower alphabet characters (standard english
-	*        26 letter alphabet) and the digits 0-9.
+	*                   contain all upper and lower alphabet characters (standard english
+	*                   26 letter alphabet) and the digits 0-9.
 	*
-	* LICENSE     : GPL
+	* LICENSE         : GPL
 	*
 	************************************************************************************** */
 	$alphanums[] = "a";
