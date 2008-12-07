@@ -78,9 +78,7 @@
 	************************************************************************************** */
 	function simplifiedInitialStep() {
 		// 8 random bytes for an initial hash
-		$fh = fopen("/dev/urandom", rb);
-		$S = fread($fh, 8);
-		fclose($fh);
+                $S = randomBytes(64); 
 		$hash = __cn_hash(sha1($S));
 		return $S;
 	}
