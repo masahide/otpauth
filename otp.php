@@ -1,33 +1,29 @@
 <?php
 	/* **************************************************************************************
-	* CODE            :
+	* FILE            : otp.php
 	* LAST UPDATED    : July 2007 by james.barkley@gmail.com 
-	* METHOD          : Not directly called
 	*
-	* DESCRIPTION     : This code is RFC 2289 (RFC2289) compliant
+	* DESCRIPTION     : Conains functions for generating and validating one-time passwords,
+        *                   checksums, etc. This code is RFC 2289 (RFC2289) compliant.
 	*
-	* LICENSE     : GPL
+	* LICENSE         : GPL
 	*
 	*
 	************************************************************************************** */
 	require_once('alphanums.php');
-	require_once('iso-646.ivcs.php');
+	require_once('iso-646.ivcs.clean.php');
 	require_once('nutils.php');
 	#require_once('io_interface.php'); /* this should contain i/o function */
 	 
-	define ('__CN_OTPSIZE', 50); /* size of lists produced */
+	define ('__CN_OTPSIZE', 50); /* size of otp lists produced */
 	 
 	/* **************************************************************************************
-	* FUNCTION          :
+	* FUNCTION          : valid_otp 
 	* LAST UPDATED      : February 2005
-	* METHOD            : Not called directly
-	* PARAMS            :
+	* PARAMS            : 
+        *  $otp               a six-word format OTP, typically from user input.
 	*
-	* DESCRIPTION       :
-	*
-	*
-	* USED BY       :
-	*
+	* DESCRIPTION       : Checks to see if the input OTP is valid based on hash of previous.
 	*
 	************************************************************************************** */
 	function valid_otp($otp) {
@@ -46,6 +42,14 @@
 		return false;
 	}
 	 
+	/* **************************************************************************************
+	* FUNCTION          : 
+	* LAST UPDATED      : February 2005
+	* PARAMS            : 
+	*
+	* DESCRIPTION       : 
+	*
+	************************************************************************************** */
 	function generator() {
 		$S = simplifiedInitialStep();
 		//$sequenceStartOffset = getRandomSequenceOffset();
@@ -54,28 +58,56 @@
 		$firstToBeUsed = $otpList[count($otpList)-1];
 		$initialHash = __cn_hash(sha1($firstToBeUsed));
 		 
-		store_hash(1, $initialHash);
 		// 1 indicates that the user should use OTP #1 for first access
-		 
+		store_hash(1, $initialHash);
 		$otpList = array_reverse($otpList);
-		// reorder for user
+
+		// turn into six-word format so user 
+		// doesn't have to type a lengthy hex string
 		$otpSixWordList = convertToSixWordFormat($otpList);
 		return $otpSixWordList;
 	}
 	 
+	/* **************************************************************************************
+	* FUNCTION          : 
+	* LAST UPDATED      : February 2005
+	* PARAMS            : 
+	*
+	* DESCRIPTION       : 
+	*
+	************************************************************************************** */
 	function simplifiedInitialStep() {
+		// 8 random bytes for an initial hash
 		$fh = fopen("/dev/urandom", rb);
 		$S = fread($fh, 8);
-		// 8 random bytes for an initial hash
 		fclose($fh);
 		$hash = __cn_hash(sha1($S));
 		return $S;
 	}
+
+
+	/* **************************************************************************************
+	* FUNCTION          : 
+	* LAST UPDATED      : February 2005
+	* PARAMS            : 
+	*
+	* DESCRIPTION       : 
+	*
+	************************************************************************************** */
 	function getRandomSequenceOffset() {
 		$offset = binStr2int(implode(randomBooleanArray(10)));
 		return $offset;
 	}
-	 
+	
+ 
+	/* **************************************************************************************
+	* FUNCTION          : 
+	* LAST UPDATED      : February 2005
+	* PARAMS            : 
+	*
+	* DESCRIPTION       : 
+	*
+	************************************************************************************** */
 	function computationStep($S, $startingOffset, $numberOfOTPs) {
 		$hash = $S;
 		for($i = 0; $i < $startingOffset; $i++) {
@@ -94,7 +126,16 @@
 		}
 		return $otpList;
 	}
-	 
+	
+ 
+	/* **************************************************************************************
+	* FUNCTION          : 
+	* LAST UPDATED      : February 2005
+	* PARAMS            : 
+	*
+	* DESCRIPTION       : 
+	*
+	************************************************************************************** */
 	function convertToSixWordFormat($otpList) {
 		$len = count($otpList);
 		for($i = 0; $i < $len; $i++) {
@@ -114,6 +155,14 @@
 	}
 	 
 	 
+	/* **************************************************************************************
+	* FUNCTION          : 
+	* LAST UPDATED      : February 2005
+	* PARAMS            : 
+	*
+	* DESCRIPTION       : 
+	*
+	************************************************************************************** */
 	function ivcs_transform_to($hex) {
 		global $ivcs;
 		 
@@ -132,6 +181,14 @@
 		return $word;
 	}
 	 
+	/* **************************************************************************************
+	* FUNCTION          : 
+	* LAST UPDATED      : February 2005
+	* PARAMS            : 
+	*
+	* DESCRIPTION       : 
+	*
+	************************************************************************************** */
 	function ivcs_transform_from($six_word) {
 		global $rev_ivcs;
 		 
@@ -163,6 +220,14 @@
 	}
 	 
 	 
+	/* **************************************************************************************
+	* FUNCTION          : 
+	* LAST UPDATED      : February 2005
+	* PARAMS            : 
+	*
+	* DESCRIPTION       : 
+	*
+	************************************************************************************** */
 	function __cn_hash($hexstr) {
 		/* break hex string into five 32-bit/4-byte values
 		this is 160 bits total, and is ALWAYS the size of
@@ -199,6 +264,14 @@
 		return (ulong2hexstr($fin[0], 8).ulong2hexstr($fin[1], 8)); // added left-zero padding to force return size of 16 hex digits
 	}
 	 
+	/* **************************************************************************************
+	* FUNCTION          : 
+	* LAST UPDATED      : February 2005
+	* PARAMS            : 
+	*
+	* DESCRIPTION       : 
+	*
+	************************************************************************************** */
 	function rfc2289_checksum($boolArr) // returns 2 lsb's of checksum in an array
 	{
 		//Calculate checksum per RFC2289 spec.
