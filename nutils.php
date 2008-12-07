@@ -1,40 +1,39 @@
 <?php
 	/* **************************************************************************************
-	* CODE            : nutils.php
-	* LAST UPDATED    : July 2007 by james.barkley@gmail.com
+	* FILE            : nutils.php
+	* LAST UPDATED    : December 2008 by james.barkley@gmail.com
 	*
 	* DESCRIPTION     : This piece of code has a number of utility functions for handling
-	*   numbers and converting between formats and types (long,bin,hex,str,etc.).
-	*   Standard size binary word here is 32-bits unsigned long int.
-	*   Some of these functions may only work with little endian byte-ordered machines.
-	*   This code is licensed under the GPL
+	*                   numbers and converting between formats and types 
+        *                   (long,bin,hex,str,etc.). Standard size binary word here is 32-bits 
+        *                   unsigned long int. Some of these functions may only work with little 
+        *                   endian byte-ordered machines. This code is licensed under the GPL
 	*
-	* FUNCTIONS     :  ulong2binstr
-	*   str2arr
-	*   binstr2int
-	*   strbin2ulong
-	*   hexstr2int
-	*   ulong2hexstr
-	*         lshft_ulong
-	*   rshft_ulong
-	*   readbit_ulong
-	*   writebit_ulong
-	*   writebit_ulong_set
-	*   writebit_ulong_unset
+	* FUNCTIONS       : ulong2binstr
+	*                   str2arr
+	*                   binstr2int
+	*                   strbin2ulong
+	*                   hexstr2int
+	*                   ulong2hexstr
+	*                   lshft_ulong
+	*                   rshft_ulong
+	*                   readbit_ulong
+	*                   writebit_ulong
+	*                   writebit_ulong_set
+	*                   writebit_ulong_unset
 	*
-	* LICENSE     : GPL
+	* LICENSE         : GPL
 	*
 	************************************************************************************** */
 	 
 	/* **************************************************************************************
 	* FUNCTION          : ulong2hexstr
 	* LAST UPDATED      : 17 March 2005
-	* METHOD            : Not called directly
 	* PARAMS            :
 	*   $ulong          : machine-packed unsigned long number
 	*
 	* DESCRIPTION       : takes a packed, unsigned long number and returns a hex string
-	*   that represents that number.
+	*                     that represents that number.
 	*
 	* PRECONDITION      : function is given a machine-packed, 32-bit (4-byte) number
 	*
@@ -58,26 +57,27 @@
 	/* **************************************************************************************
 	* FUNCTION          : hexstr2int
 	* LAST UPDATED      : 17 March 2005
-	* METHOD            : Not called directly
 	* PARAMS            :
 	*   $string         : string representation of hex number
 	*
 	* DESCRIPTION       : takes a string hex number and returns a numeric integer representation
-	*      note that strings prefixed with 0x are not handled.  Here are some examples:
-	*   0xFF = 255
-	*    aBcD = 43981
-	*   FFFF = 65535
-	*   FFFFFF = 16777215
-	*   FFFFFFFF = 4294967295
-	*   FFFFFFFFFF = 1099511627775
-	*   FFFFFFFFFFFF = 2.8147497671066E+14
-	*   fffffffffffffffffffffffffFFFFFFFFFFFFFFFFFFFFFFF = 6.2771017353867E+57
-	*   0x00 = 0
-	*   0x0j = -1
+	*                     note that strings prefixed with 0x are not handled.  
+        *                     Here are some examples:
+	*                     0xFF = 255
+	*                     aBcD = 43981
+	*                     FFFF = 65535
+	*                     FFFFFF = 16777215
+	*                     FFFFFFFF = 4294967295
+	*                     FFFFFFFFFF = 1099511627775
+	*                     FFFFFFFFFFFF = 2.8147497671066E+14
+	*                     fffffffffffffffffffffffffFFFFFFFFFFFFFFFFFFFFFFF = 6.2771017353867E+57
+	*                     0x00 = 0
+	*                     0x0j = -1
 	*
 	* PRECONDITION      : function is passed a string that is a hexadecimal numeric format
 	*
-	* POSTCONDITION     : function returns an integer value equivalent to the value of the hex number passed in
+	* POSTCONDITION     : function returns an integer value equivalent to the value of the 
+        *                     hex number passed in
 	*
 	************************************************************************************** */
 	function hexstr2int($string) {
@@ -161,19 +161,21 @@
 	/* **************************************************************************************
 	* FUNCTION          : binstr2int
 	* LAST UPDATED      : 17 March 2005
-	* METHOD            : Not called directly
 	* PARAMS            :
 	*   $string         : string or array representation of binary number
 	*
 	* DESCRIPTION       : convert a string or array of binary numbers to numeric integer value
-	*      Examples:
-	*      "01101101010"
-	*      $string[0] = "0", $string[1] = "1", ..., $string[31] = "0"
-	* PRECONDITION      : $string is a string or array consisting of only 1 and 0 values and possibly ending with a 'b'
+	*                     Examples:
+	*                     "01101101010"
+	*                     $string[0] = "0", $string[1] = "1", ..., $string[31] = "0"
+        *
+	* PRECONDITION      : $string is a string or array consisting of only 1 and 0 values and 
+        *                     possibly ending with a 'b'
+        *
 	* POSTCONDITION     : returns a numeric representation of the string as an integer
 	*
-	* NOTE       : This is a pretty naive algorithm - there is probably a better way
-	*   to compute this without chewing up so much CPU cycles
+	* NOTE              : This is a pretty naive algorithm - there is probably a better way
+	*                     to compute this without chewing up so much CPU cycles
 	*
 	************************************************************************************** */
 	function binstr2int($string) {
@@ -208,28 +210,28 @@
 	/* **************************************************************************************
 	* FUNCTION          : strbin2ulong
 	* LAST UPDATED      : 17 March 2005
-	* METHOD            : Not called directly
 	* PARAMS            :
 	*   $value          : a string or array representation of a binary number
 	*
 	* DESCRIPTION       : ingests a string or array representation of a binary number
-	*   and returns a machine-native packed unsigned long integer.
-	*   Standard size here is 32-bit (4-byte) value returned.  Note
-	*   that big/little endian byte-order is not enforced.
-	*     Examples:
-	*    "01101101010"
-	*    $string[0] = "0", $string[1] = "1", ..., $string[31] = "0"
-	*    returns a numeric representation of the string
-	*    as a machine-packed, unsigned ulong.
+	*                     and returns a machine-native packed unsigned long integer.
+	*                     Standard size here is 32-bit (4-byte) value returned.  Note
+	*                     that big/little endian byte-order is not enforced.
+	*                     Examples:
+	*                     "01101101010"
+	*                     $string[0] = "0", $string[1] = "1", ..., $string[31] = "0"
+	*                     returns a numeric representation of the string
+	*                     as a machine-packed, unsigned ulong.
 	*
 	* PRECONDITION      : $value is a string or array consisting of only 1 and 0 values
-	*   and possibly ending with a 'b'
+	*                     and possibly ending with a 'b'
+        *
 	* POSTCONDITION     : returns a native-machine format packed binary number of
-	*   the value repesented by $value in binary
+	*                     the value repesented by $value in binary
 	*
-	* NOTES       : WARNING, unpacking a ulong number greater than 31 bits in length
-	*   will result in overflow to a negative number.  PHP does not
-	*   handle unsigned ints or signed ones greater than 31 bits in length.
+	* NOTES             : WARNING, unpacking a ulong number greater than 31 bits in length
+	*                     will result in overflow to a negative number.  PHP does not
+	*                     handle unsigned ints or signed ones greater than 31 bits in length.
 	*
 	************************************************************************************** */
 	function strbin2ulong($value) {
@@ -245,16 +247,17 @@
 	/* **************************************************************************************
 	* FUNCTION          : str2arr
 	* LAST UPDATED      : 17 March 2005
-	* METHOD            : Not called directly
 	* PARAMS            :
 	*   $string         : a string of any size or characters
 	*
 	* DESCRIPTION       : ingests a string and returns and returns an ordered array of the string
-	*   accepts a string, returns an ordered array
-	*    with each character being one array element
+	*                     accepts a string, returns an ordered array
+	*                     with each character being one array element
 	*
 	* PRECONDITION      : $string is a string variable of any size or characters
-	* POSTCONDITION     : returns a numbered array (ordered 0 through (n-1) where n is the length of the string)
+        *
+	* POSTCONDITION     : returns a numbered array (ordered 0 through (n-1) where n is the 
+        *                     length of the string)
 	*
 	*
 	************************************************************************************** */
@@ -272,20 +275,24 @@
 	/* **************************************************************************************
 	* FUNCTION          : readbit_ulong
 	* LAST UPDATED      : 17 March 2005
-	* METHOD            : Not called directly
 	* PARAMS            :
 	*   $val            : a machine-packed, unsigned long int (32-bit/4-byte)
-	*   $bit            : a integer representing a bit position from 0 to 31.  bit 0 is most significant
+	*   $bit            : a integer representing a bit position from 0 to 31.  bit 0 is 
+        *                     most significant
 	*
 	* DESCRIPTION       :  accepts a machine-packed, unsigned long int
-	*    and a bit position and returns the value
-	*    of the bit at that position of the integer as a character value of either '0' or '1'
-	*    (either a '1' or a '0' - note the difference
-	*    between '1' and 1 and also the difference
-	*    between '0' and 0)
+	*                      and a bit position and returns the value
+	*                      of the bit at that position of the integer as a character 
+        *                      value of either '0' or '1'
+	*                      - note the difference
+	*                      between '1' and 1 and also the difference
+	*                      between '0' and 0)
 	*
-	* PRECONDITION      : $val is a machine-packed, unsigned long int (32-bit/4-byte)  and $bit is an int from 0 to 31
-	* POSTCONDITION     : returns a '0' character or a '1' character representing the bit at $bit of $val
+	* PRECONDITION      : $val is a machine-packed, unsigned long int (32-bit/4-byte) 
+        *                     and $bit is an int from 0 to 31
+        *
+	* POSTCONDITION     : returns a '0' character or a '1' character representing the bit 
+        *                     at $bit of $val
 	*
 	************************************************************************************** */
 	function readbit_ulong($val, $bit) {
@@ -307,19 +314,60 @@
 	 
 	/* accepts a machine-packed, unsigned long int
 	and a bit position and a set value (either 'ON' or 'OFF').
-	Function sets the value
-	of the bit at that position of the integer
-	/* bit 1 is most significant */
+	/* **************************************************************************************
+	* FUNCTION          : writebit_ulong
+	* LAST UPDATED      : 06 December 2008
+	* PARAMS            :
+	*   $val            : a machine-packed, unsigned long int (32-bit/4-byte)
+	*   $bit            : a integer representing a bit position from 0 to 31.  bit 0 is 
+        *                     most significant
+        *   $set            : either "ON" or "OFF". Tells function which way to flip the bigt
+	*
+	* DESCRIPTION       :  accepts a machine-packed, unsigned long int
+	*                      and a bit position and a set value (either 'ON or 'OFF').
+	*                      Function sets the value of the bit at that position of the integer
+        *                      Bit 1 is most significant.
+	*
+	* PRECONDITION      : $val is a machine-packed, unsigned long int (32-bit/4-byte), 
+        *                     $bit is an int from 0 to 31,
+        *                     $set is either "ON" or "OFF"
+        *
+	* POSTCONDITION     : sets a '0' character or a '1' character representing the bit 
+        *                     at $bit of $val
+	*
+	************************************************************************************** */
 	function writebit_ulong($val, $bit, $set = 'ON') {
 		if ($set == 'ON') {
 			writebit_ulong_set($val, $bit);
 		}
 		else if ($set == 'OFF') {
 			writebit_ulong_unset($val, $bit);
-		}
+		} else {
+			//error message
+                }
 	}
 	 
 	/* helper function for writebit_ulong - sets a bit to 1 */
+	/* **************************************************************************************
+	* FUNCTION          : writebit_ulong_set
+	* LAST UPDATED      : 17 March 2005
+	* PARAMS            :
+	*   $val            : a machine-packed, unsigned long int (32-bit/4-byte)
+	*   $bit            : a integer representing a bit position from 0 to 31.  bit 0 is 
+        *                     most significant
+	*
+	* DESCRIPTION       :  accepts a machine-packed, unsigned long int
+	*                      and a bit position and a set value (either 'ON or 'OFF').
+	*                      Function sets the value of the bit at that position of the integer
+        *                      to a 1. Bit 1 is most significant.
+	*
+	* PRECONDITION      : $val is a machine-packed, unsigned long int (32-bit/4-byte), 
+        *                     $bit is an int from 0 to 31,
+        *
+	* POSTCONDITION     : sets a 1 representing the bit 
+        *                     at $bit of $val
+	*
+	************************************************************************************** */
 	function writebit_ulong_set($val, $bit) {
 		$bin_val = ulong2binstr($val);
 		$bin_arr = str2arr($bin_val);
@@ -328,7 +376,26 @@
 		return (strbin2ulong($bin_val));
 	}
 	 
-	/* helper function for writebit_ulong - sets a bit to 0 */
+	/* **************************************************************************************
+	* FUNCTION          : writebit_ulong_unset
+	* LAST UPDATED      : 17 March 2005
+	* PARAMS            :
+	*   $val            : a machine-packed, unsigned long int (32-bit/4-byte)
+	*   $bit            : a integer representing a bit position from 0 to 31.  bit 0 is 
+        *                     most significant
+	*
+	* DESCRIPTION       :  accepts a machine-packed, unsigned long int
+	*                      and a bit position and a set value (either 'ON or 'OFF').
+	*                      Function sets the value of the bit at that position of the integer
+        *                      to a 0. Bit 1 is most significant.
+	*
+	* PRECONDITION      : $val is a machine-packed, unsigned long int (32-bit/4-byte), 
+        *                     $bit is an int from 0 to 31,
+        *
+	* POSTCONDITION     : sets a 0 representing the bit 
+        *                     at $bit of $val
+	*
+	************************************************************************************** */
 	function writebit_ulong_unset($val, $bit) {
 		$bin_val = ulong2binstr($val);
 		$bin_arr = str2arr($bin_val);
@@ -338,9 +405,21 @@
 	}
 	 
 	 
-	/* accepts a machine-packed unsigned long int
-	and returns a string representation of the
-	binary entity (e.g. 10110010101....) */
+	/* **************************************************************************************
+	* FUNCTION          : ulong2binstr
+	* LAST UPDATED      : 17 March 2005
+	* PARAMS            :
+	*   $val            : a machine-packed, unsigned long int (32-bit/4-byte)
+	*
+	* DESCRIPTION       :  accepts a machine-packed, unsigned long int
+	*                      and returns a string representation of the 
+	*                      binary entity (e.g. 10110010101....)
+	*
+	* PRECONDITION      : $val is a machine-packed, unsigned long int (32-bit/4-byte), 
+        *
+	* POSTCONDITION     : returns a string representation of the ulong
+	*
+	************************************************************************************** */
 	function ulong2binstr($val) {
 		$binstr = '';
 		for ($i = 0; $i < 32; ++$i) {
@@ -350,22 +429,37 @@
 	}
 	 
 	 
-	/* accepts machine-packed unsigned long int,
-	shift amount, and wrap.  PHP does not support
-	these types of operations for 32-bit unsigned
-	integers.  This function shifts $ulong by
-	$amount and fills in newly shifted in positions
-	to $wrap.
-	Example 1:
-	rshft_ulong(pack("L",0x0), 31, 0) results in:
-	original value:  1000 0000 0000 0000 0000 0000 0000 0000
-	returned value:  0000 0000 0000 0000 0000 0000 0000 0001
-	 
-	Example 2:
-	rshft_ulong(pack("L", 5), 2, 1) results in:
-	original value:  0000 0000 0000 0000 0000 0000 0000 0101
-	returned value:  1100 0000 0000 0000 0000 0000 0000 0001
-	*/
+	/* **************************************************************************************
+	* FUNCTION          : rshft_ulong
+	* LAST UPDATED      : 17 March 2005
+	* PARAMS            :
+	*   $ulong          : a machine-packed, unsigned long int (32-bit/4-byte)
+	*   $amount         : an integer representing the number of bits to shift 
+	*   $wrap           : a binary (1 or 0) value indicating whether or not the shift 
+        *                     should wrap the numbers that are moved out to the other side 
+        *                     of the ulong or if it should be filled with zeroes.
+	*
+	* DESCRIPTION       :  accepts a machine-packed, unsigned long int, shift amount, and wrap.  
+        *                      PHP does not support these types of operations for 32-bit unsigned
+	*                      integers.  This function shifts $ulong by $amount and fills in newly 
+        *                      shifted in positions to $wrap.
+        *
+	*                      Example 1:
+	*                      rshft_ulong(pack("L",0x0), 31, 0) results in:
+	*                      original value:  1000 0000 0000 0000 0000 0000 0000 0000
+ 	*                      returned value:  0000 0000 0000 0000 0000 0000 0000 0001
+	* 
+	*                      Example 2:
+	*                      rshft_ulong(pack("L", 5), 2, 1) results in:
+	*                      original value:  0000 0000 0000 0000 0000 0000 0000 0101
+	*                      returned value:  1100 0000 0000 0000 0000 0000 0000 0001
+	*
+	* PRECONDITION      : $val is a machine-packed, unsigned long int (32-bit/4-byte), 
+        *                     $amount is an integer, and $wrap is a binary 
+        *
+	* POSTCONDITION     : returns $ulong shifted by $amount with wrapped digits or zeroed
+	*
+	************************************************************************************** */
 	function rshft_ulong($ulong, $amount, $wrap = 0) {
 		$orig = str2arr(ulong2binstr($ulong));
 		for ($i = 0; $i < $amount; ++$i) {
@@ -383,22 +477,27 @@
 	 
 	 
 	 
-	/* accepts machine-packed unsigned long int,
-	shift amount, and wrap.  PHP does not support
-	these types of operations for 32-bit unsigned
-	integers.  This function shifts $ulong by
-	$amount and fills in newly shifted in positions
-	to $wrap.
-	Example 1:
-	rshft_ulong(pack("L",0x0), 31, 0) results in:
-	original value:  0000 0000 0000 0000 0000 0000 0000 0001
-	returned value:  1000 0000 0000 0000 0000 0000 0000 0000
-	 
-	Example 2:
-	rshft_ulong(pack("L", 5), 28, 1) results in:
-	original value:  0000 0000 0000 0000 0000 0000 0000 0101
-	returned value:  1011 1111 1111 1111 1111 1111 1111 1111
-	*/
+	/* **************************************************************************************
+	* FUNCTION          : lshft_ulong
+	* LAST UPDATED      : 17 March 2005
+	* PARAMS            :
+	*   $ulong          : a machine-packed, unsigned long int (32-bit/4-byte)
+	*   $amount         : an integer representing the number of bits to shift 
+	*   $wrap           : a binary (1 or 0) value indicating whether or not the shift 
+        *                     should wrap the numbers that are moved out to the other side 
+        *                     of the ulong or if it should be filled with zeroes.
+	*
+	* DESCRIPTION       :  accepts a machine-packed, unsigned long int, shift amount, and wrap.  
+        *                      PHP does not support these types of operations for 32-bit unsigned
+	*                      integers.  This function shifts $ulong by $amount and fills in newly 
+        *                      shifted in positions to $wrap.
+        *
+	* PRECONDITION      : $val is a machine-packed, unsigned long int (32-bit/4-byte), 
+        *                     $amount is an integer, and $wrap is a binary 
+        *
+	* POSTCONDITION     : returns $ulong shifted right by $amount with wrapped digits or zeroed
+	*
+	************************************************************************************** */
 	function lshft_ulong($ulong, $amount, $wrap = 0) {
 		$orig = str2arr(ulong2binstr($ulong));
 		for ($i = 0; $i < $amount; ++$i) {
@@ -425,8 +524,24 @@
 		return strbin2ulong($shifted);
 	}
 	 
-	// This routine is much faster than the routine it replaces (see commented out code)
-	// and is general purpose.
+	/* **************************************************************************************
+	* FUNCTION          : hexString_2_booleanArray($hex)
+	* LAST UPDATED      : 17 March 2005
+	* PARAMS            :
+	*   $hex            : a string representing a hex number
+	*
+	* DESCRIPTION       : This routine takes a hex string and transforms it into 
+        *                     a boolean array
+        *
+	* PRECONDITION      : $hex is a hex string
+        *
+	* POSTCONDITION     : returns an array representing a binary unsigned long, with 
+        *                     each position of the array set as a 1 or a 0
+        *
+	* NOTES             : This routine is much faster than the routine it replaces (see 
+        *                     commented out code) and is general purpose. 
+	*
+	************************************************************************************** */
 	function hexString_2_booleanArray($hex) {
 		$len = strlen($hex);
 		$t = "0000000100100011010001010110011110001001101010111100110111101111";
@@ -455,7 +570,24 @@
 	}
 	*/
 	 
-	// WARNING : This consumes 4 bit nibbles, and ignores any trailing bits.
+	/* **************************************************************************************
+	* FUNCTION          : booleanArray_2_hexString
+	* LAST UPDATED      : 17 March 2005
+	* PARAMS            :
+	*   $boolArr        : a boolean array that represents an unsigned int 
+	*
+	* DESCRIPTION       : This routine takes a boolean array transforms it into 
+        *                     a hex string
+        *
+	* PRECONDITION      : $boolArr is an array representation of a binary entity
+        *
+	* POSTCONDITION     : returns an string of hex digits that is equal numerically 
+        *                     to the binary number it ingested
+        *
+	* NOTES             : WARNING, This consumes 4 bit nibbles and ignores any trailing bits. 
+        *                    
+	*
+	************************************************************************************** */
 	function booleanArray_2_hexString($boolArr) {
 		$t = "0123456789abcdef"; // lower case letter to conform with sha1() convention
 		$length = floor(count($boolArr)/4);
