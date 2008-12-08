@@ -1,39 +1,43 @@
 <?php
+	require_once('demodb_functions.php');
 
-initialize_db();
+	//print "<h1>".$_POST['login']."</h1>";
+	print_r($_POST);
 
-print "Please login with <b>user 'demo'</b> and <b>password 'demopass'</b>.";
+	if (!db_initialized()) {
+		initialize_db();
+	}
 
+	if ($_POST['login']) {
+		$user = $_POST['user'];
+		$pw = $_POST['password'];
+		if (check_login($user, $pw)) {
+			print "LOGIN PASSED!\n<br/>";
+		} else {
+			print "LOGIN FAILED!\n<br/>";
+		}
 
-print "<br/><br/>";
-
-
-print "<form>";
-
-print "Username: <input type='text' name='user' value='demo'>";
-print "<br/>";
-print "<br/>";
-print "Password: <input type='text' name='password' value=''>";
-print "<br/>";
-print "<br/>";
-print "<input type='submit' name='login'>";
-
-
-print "</form>";
-
-
+	} else {
+		print_login_page();
+	}
 ?>
 <?php
+	function print_login_page() {
+		print "Please login with <b>user 'demo'</b> and <b>password 'demopass'</b>.";
 
-function initialize_db() {
-	$dbhandle = sqlite_open('demodb.sqllite');
+		print "<br/><br/>";
 
+		print "<form action='.' method='post'>";
 
-	$query = sqlite_exec($dbhandle, "CREATE TABLE test (id int(11), requests int(11), PRIMARY KEY (id))", $error);
-	if (!$query) {
-		exit("Error in query: '$error'");
-	} else {
-		echo 'Number of rows modified: ', sqlite_changes($dbhandle);
+		print "Username: <input type='text' name='user' value='demo'>";
+		print "<br/>";
+		print "<br/>";
+		print "Password: <input type='password' name='password' value='demopass'>";
+		print "<br/>";
+		print "<br/>";
+		print "<input type='submit' name='login' value='login'>";
+
+		print "</form>";
 	}
-}
+
 ?>
