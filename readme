@@ -10,7 +10,7 @@ size		file name		description
 35556		nutils.php		various numeric utility functions 
 2227		otp_challenge.php	sample page to present to user 
 27737		otp.php			actual algorithms to do the cryptography for generating and validating OTP's 
-1729		otp_stubs.php		you'll have to fill these in to do I/O and such
+1729		otp_io.php	        you'll have to fill these in to do I/O and such
 11087		otp_utils_DEMO.php	this is a set of unit tests (mostly for the elemental functions in nutils.php)
 20478		random_utils.php	various random utility functions
 1577		readme			this file

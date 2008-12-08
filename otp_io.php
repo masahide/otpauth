@@ -1,6 +1,6 @@
 <?php
 	/* **************************************************************************************
-	* FILE            : otp_stubs.php
+	* FILE            : otp_io.php
 	* LAST UPDATED    : December 2008 by james.barkley@gmail.com
 	*
 	* DESCRIPTION     : This piece of code has a number of i/o functions that are application
