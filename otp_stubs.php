@@ -1,32 +1,121 @@
 <?php
-	/* LICENSED UNDER THE GPL */
-	/******************* Your system specific functions (you fill these in) ****************************/
+	/* **************************************************************************************
+	* FILE            : otp_stubs.php
+	* LAST UPDATED    : December 2008 by james.barkley@gmail.com
+	*
+	* DESCRIPTION     : This piece of code has a number of i/o functions that are application
+	*                   specific. Library users will need to fill this in with their own code
+        *                   to use this library.
+	*
+	* FUNCTIONS       : set_last_otp
+	*                   compare_last_otp
+	*                   store_hash
+	*
+	* LICENSE         : GPL
+	*
+	************************************************************************************** */
+
+
+	/* **************************************************************************************
+         *
+         *      YOUR SYSTEM SPECIFIC FUNCTIONS. YOU FILL THESE IN !!!!
+         *
+	************************************************************************************** */
+	
+
+
+
+
+
+
+
+
+ 
 	 
-	function get_otp_seq() {
-		/*  look at user credentials,
-		retrieve sequence number for that user,
-		and return sequence number or err out
-		*/
-	}
 	 
-	 
+	/* **************************************************************************************
+	* FUNCTION          : set_last_otp
+        *
+	* LAST UPDATED      : 17 March 2005
+        *
+	* PARAMS            : 
+        *   $cur	      last used otp
+	*
+	* DESCRIPTION       : sets $cur as the last otp used by that user
+	*
+	************************************************************************************** */
 	function set_last_otp($cur) {
-		/*  set otp passed as the last
-		otp used by that user
-		*/
+		$sql = "UPDATE otp SET last_otp='$cur',
+	        	sequence='$seq' WHERE user_id='$uid'";
+		db_query($sql);
+		$sql = "UPDATE session set lock_state=0
+		        WHERE user_id=$uid";
+		db_query($sql);
+		return true;
 	}
 	 
+	/* **************************************************************************************
+	* FUNCTION          : compare_last_otp
+        *
+	* LAST UPDATED      : 17 March 2005
+        *
+	* PARAMS            : 
+        *   $last             an otp expected to be the last one requested.
+	*
+	* DESCRIPTION       : Takes an OTP, presumably from the user, and compares it with the 
+	*                     database/datasource to see if it is the correct OTP.
+	*
+	************************************************************************************** */
 	function compare_last_otp($last) {
 		/* look at user credentials,
 		retrieve last used otp,
 		compare last used otp with passed in variable,
 		return true if equal, false otherwise
 		*/
+		$uid = user_getid();
+		if (!$uid) { return false; }
+		$sql = "SELECT * FROM otp WHERE user_id='$uid'
+		        AND last_otp='$last'";
+		$res = db_query($sql);
+		if (!$res || db_numrows($res)<1) { return false; }
+		if (db_numrows($res)>1 ) { return false; }
+		else {
+			$row  = db_fetch_array($match);
+			$seq = $row['sequence'];
+			return ($seq-1);
+		}
+		return false; /* catch-all */
 	}
 	 
 	 
-	function store_hash ($sequence, $initial, $user) {
+	/* **************************************************************************************
+	* FUNCTION          : store_hash
+        *
+	* LAST UPDATED      : 17 March 2005
+        *
+	* PARAMS            : 
+        *   $sequence	      sequence to store 
+        *   $initial          initial otp 
+	*
+	* DESCRIPTION       : initialize otp status of $user to $sequence and $initial
+	*
+	************************************************************************************** */
+	function store_hash ($sequence, $initial) {
 		/*  initialize otp status of $user to $sequence and $initial */
+		if (!$uid) { $uid = user_getid(); }
+		if (!$uid) { return false; }
+		$sql = "SELECT * FROM otp WHERE user_id=$uid";
+		$res = db_query($sql);
+		if (!$res || db_numrows($res)<1) {
+			$sql = "INSERT INTO otp (user_id, sequence, last_otp, time)
+        		VALUES ($uid, ".($sequence+__CN_OPTSIZE-1).", '$initial', ".time().")";
+		} else {
+			$sql = "UPDATE otp set sequence='".($sequence+__CN_OPTSIZE-1)."'
+				, last_otp='$initial'
+				, time='".time()."'
+			        WHERE user_id='$uid'";
+		}
+		db_query($sql);
 	}
 	 
 	/*

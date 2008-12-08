@@ -1,5 +1,5 @@
 <?php
-	/* **************************************************************************************
+	/***************************************************************************************
 	* FILE            : nutils.php
 	* LAST UPDATED    : December 2008 by james.barkley@gmail.com
 	*
@@ -21,7 +21,9 @@
 	*                   writebit_ulong
 	*                   writebit_ulong_set
 	*                   writebit_ulong_unset
-	*
+	*                   randomBooleanArray
+	*                   randomBytes
+        *
 	* LICENSE         : GPL
 	*
 	************************************************************************************** */
@@ -600,14 +602,14 @@
 	}
 	
  
-	/* **************************************************************************************
+	/***************************************************************************************
 	* FUNCTION          : randomBooleanArray
 	* LAST UPDATED      : 17 March 2005
 	* PARAMS            :
 	*   $numBits        : an integer representing the amount of random data in bits 
         *                     you want returned
 	*
-	* DESCRIPTION       : This routine the number an integer and returns a random 
+	* DESCRIPTION       : This routine takes an integer and returns a random 
         *                     boolean array of that many bits
         *
 	* PRECONDITION      : $numBits is a positive integer
@@ -623,6 +625,22 @@
 		return array_slice($booleanArray, 0, $numBits);
 	}
 
+	/***************************************************************************************
+	* FUNCTION          : randomBytes
+	* LAST UPDATED      : 17 March 2005
+	* PARAMS            :
+	*   $numBits        : an integer representing the amount of random data in bits 
+        *                     you want returned
+	*
+	* DESCRIPTION       : This routine takes an integer and returns a random string 
+        *                     of bytes
+        *
+	* PRECONDITION      : $numBits is a positive integer
+        *
+	* POSTCONDITION     : returns an string $numBites of bits in length 
+        *
+	*
+	************************************************************************************** */
         function randomBytes($numBits) {
 		$numBytes = floor(($numBits+7)/8);
                 //if (/dev/urandom available) {
