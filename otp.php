@@ -32,7 +32,7 @@
 			$otp = explode(' ', $otp);
 		}
 		$cur = ivcs_transform_from($otp);
-		$last = __cn_hash(sha1($cur));
+		$last = __otp_hash(sha1($cur));
 		$match = compare_last_otp($last);
 		if (!$match) {
 			return false;
@@ -43,20 +43,19 @@
 	}
 	 
 	/* **************************************************************************************
-	* FUNCTION          : 
+	* FUNCTION          : generator()
 	* LAST UPDATED      : February 2005
-	* PARAMS            : 
+	* PARAMS            : none
 	*
-	* DESCRIPTION       : 
+	* DESCRIPTION       : returns a six-word format list of N OTPs, and stores the first hash
+        *		      in the database.
 	*
 	************************************************************************************** */
 	function generator() {
 		$S = simplifiedInitialStep();
-		//$sequenceStartOffset = getRandomSequenceOffset();
-		$sequenceStartOffset = 0;
-		$otpList = computationStep($S, $sequenceStartOffset, __CN_OTPSIZE);
+		$otpList = computationStep($S, __CN_OTPSIZE);
 		$firstToBeUsed = $otpList[count($otpList)-1];
-		$initialHash = __cn_hash(sha1($firstToBeUsed));
+		$initialHash = __otp_hash(sha1($firstToBeUsed));
 		 
 		// 1 indicates that the user should use OTP #1 for first access
 		store_hash(1, $initialHash);
@@ -69,54 +68,40 @@
 	}
 	 
 	/* **************************************************************************************
-	* FUNCTION          : 
+	* FUNCTION          : simplifiedInitialStep()
 	* LAST UPDATED      : February 2005
-	* PARAMS            : 
+	* PARAMS            : none
 	*
-	* DESCRIPTION       : 
+	* DESCRIPTION       : Creates the initial hash based off random seed
 	*
 	************************************************************************************** */
 	function simplifiedInitialStep() {
 		// 8 random bytes for an initial hash
                 $S = randomBytes(64); 
-		$hash = __cn_hash(sha1($S));
+		$hash = __otp_hash(sha1($S));
 		return $S;
 	}
 
 
 	/* **************************************************************************************
-	* FUNCTION          : 
+	* FUNCTION          : computationStep()
 	* LAST UPDATED      : February 2005
 	* PARAMS            : 
+        *  $S                 $initial hash
+        *  $numberOfOTPs      $size of list to create
 	*
-	* DESCRIPTION       : 
-	*
-	************************************************************************************** */
-	function getRandomSequenceOffset() {
-		$offset = binStr2int(implode(randomBooleanArray(10)));
-		return $offset;
-	}
-	
- 
-	/* **************************************************************************************
-	* FUNCTION          : 
-	* LAST UPDATED      : February 2005
-	* PARAMS            : 
-	*
-	* DESCRIPTION       : 
+	* DESCRIPTION       : This function takes an initial hash and the number of OTPs to create
+        *                     and returns a list of size $numberOfOTPs
 	*
 	************************************************************************************** */
-	function computationStep($S, $startingOffset, $numberOfOTPs) {
+	function computationStep($S, $numberOfOTPs) {
 		$hash = $S;
-		for($i = 0; $i < $startingOffset; $i++) {
-			$hash = __cn_hash(sha1($hash));
-		}
 		for($i = 0; $i < $numberOfOTPs; $i++) {
-			$hash = __cn_hash(sha1($hash));
+			$hash = __otp_hash(sha1($hash));
 			 
 			/////////////////////// length integrity check//////////////////////////
 			if (strlen($hash) != 16) {
-				error_log("computation step : __cn_hash produced strlen(hash) = ".strlen($hash));
+				error_log("computation step : __otp_hash produced strlen(hash) = ".strlen($hash));
 			}
 			///////////////////////////////////////////////////////////////////////
 			 
@@ -127,11 +112,13 @@
 	
  
 	/* **************************************************************************************
-	* FUNCTION          : 
+	* FUNCTION          : convertToSixWordFormat()
 	* LAST UPDATED      : February 2005
 	* PARAMS            : 
+        *  $otpList	      An array of OTPs of variable size
 	*
-	* DESCRIPTION       : 
+	* DESCRIPTION       : This function takes an otp list and returns the same list in 
+        * 		      six-word format.
 	*
 	************************************************************************************** */
 	function convertToSixWordFormat($otpList) {
@@ -154,11 +141,12 @@
 	 
 	 
 	/* **************************************************************************************
-	* FUNCTION          : 
+	* FUNCTION          : ivcs_transform_to
 	* LAST UPDATED      : February 2005
 	* PARAMS            : 
+        *   $hex              a string representation of a hex number
 	*
-	* DESCRIPTION       : 
+	* DESCRIPTION       : Takes $hex and returns an ivcs six-word form of the number
 	*
 	************************************************************************************** */
 	function ivcs_transform_to($hex) {
@@ -180,11 +168,12 @@
 	}
 	 
 	/* **************************************************************************************
-	* FUNCTION          : 
+	* FUNCTION          : ivcs_transform_from
 	* LAST UPDATED      : February 2005
 	* PARAMS            : 
+        *   $six_word         An array or whitespace separated string of six-words in the ivcs list
 	*
-	* DESCRIPTION       : 
+	* DESCRIPTION       : Takes six-word ivcs format and returns a hex representation
 	*
 	************************************************************************************** */
 	function ivcs_transform_from($six_word) {
@@ -219,17 +208,17 @@
 	 
 	 
 	/* **************************************************************************************
-	* FUNCTION          : 
+	* FUNCTION          : __otp_hash 
 	* LAST UPDATED      : February 2005
 	* PARAMS            : 
-	*
-	* DESCRIPTION       : 
+        *   $hexstr	      a hex-string
+        *
+	* DESCRIPTION       : Breaks $hexstr (a hex string) into five 32-bit/4-byte values.
+        *                     This is 160 bits total, and is ALWAYS the size of a sha1 hash value
+        *                     regardless of hash input. Applies folding algorithm.
 	*
 	************************************************************************************** */
-	function __cn_hash($hexstr) {
-		/* break hex string into five 32-bit/4-byte values
-		this is 160 bits total, and is ALWAYS the size of
-		a sha1 hash value regardless of hash input */
+	function __otp_hash($hexstr) {
 		for ($i = 0; $i < 5; ++$i) {
 			$cur[$i] = substr($hexstr, $i * 8, 8);
 			$cur[$i] = pack("L", hexstr2int($cur[$i]));
@@ -263,11 +252,13 @@
 	}
 	 
 	/* **************************************************************************************
-	* FUNCTION          : 
+	* FUNCTION          : rfc2289_checksum
 	* LAST UPDATED      : February 2005
 	* PARAMS            : 
+        *   $boolArr          
 	*
-	* DESCRIPTION       : 
+	* DESCRIPTION       : Calculates checksum per RFC2289 spec.  Returns 2 lsb's of checksum 
+        *                     in an array.
 	*
 	************************************************************************************** */
 	function rfc2289_checksum($boolArr) // returns 2 lsb's of checksum in an array
