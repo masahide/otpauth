@@ -4,23 +4,17 @@ function check_login($user, $pw) {
 	$dbhandle = sqlite_open('demodb.sqlite');
 	$real_pw = sha1($pw);
 print "<H1>|$pw|$real_pw|</h1>";
-	$sql = "SELECT * from user WHERE user_name='$user' AND user_pw='$real_pw'"; 
+	$sql = "SELECT * from user WHERE name='$user' AND pw='$real_pw'"; 
 	$res = sqlite_query($dbhandle, $sql, $error);
-print "before res";
-print_r($res);
-while ($entry = sqlite_fetch_array($res, SQLITE_ASSOC)) {
-print "---------------------------\n<br/>";
-print_r($entry);
-print "---------------------------\n<br/>";
-}
-print "after res";
-	if (!$res) { 
-		return false;
-	} 
-	else { 
-		return true;
-	}
 
+print "<h1>$sql</h1>";
+	if (sqlite_num_rows($res)<1) {
+          return false;
+        } elseif (mysql_num_rows($res)>1) {
+          return false;
+        } else {
+          return true;
+        }
 }
 
 function db_initialized() {
@@ -49,11 +43,11 @@ function initialize_db() {
           CREATE TABLE user (
             id int auto_increment,
             name text NOT NULL,
-            pw varchar(32) NOT NULL default '',
-            realname varchar(32) NOT NULL default '',
+            pw varchar(40) NOT NULL default '',
+            realname varchar(40) NOT NULL default '',
             status char(1) NOT NULL default 'A',
             add_date int(11) NOT NULL default '0',
-            confirm_hash varchar(32) default NULL,
+            confirm_hash varchar(40) default NULL,
             phone_number varchar(20) NOT NULL default '',
             last_pw_change int(11) NOT NULL default '0',
             otp_enabled  tinyint(1) NOT NULL default '0', 

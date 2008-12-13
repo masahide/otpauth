@@ -2,7 +2,7 @@
 	require_once('db_functions.php');
 
 	//print "<h1>".$_POST['login']."</h1>";
-	print_r($_POST);
+	//print_r($_POST);
 
 	if (!db_initialized()) {
 		initialize_db();
