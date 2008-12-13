@@ -1,23 +1,8 @@
 <?php
 
-function check_login($user, $pw) {
-	$dbhandle = sqlite_open('demo_auth_db.sqlite');
-	$real_pw = sha1($pw);
-print "<H1>|$pw|$real_pw|</h1>";
-	$sql = "SELECT * from user WHERE username='$user' AND pw='$real_pw'"; 
-	$res = sqlite_query($dbhandle, $sql, $error);
-
-print "<h1>$sql</h1>";
-	if (sqlite_num_rows($res)<1) {
-          return false;
-        } elseif (mysql_num_rows($res)>1) {
-          return false;
-        } else {
-          return true;
-        }
-}
 
 function auth_db_initialized() {
+	$error = '';
 	$dbhandle = sqlite_open('demo_auth_db.sqlite');
 	$sql = "select * from user";
 	$query = sqlite_exec($dbhandle, $sql, $error);
@@ -32,6 +17,7 @@ function auth_db_initialized() {
 }
 
 function initialize_auth_db() {
+	$error = '';
 	$dbhandle = sqlite_open('demo_auth_db.sqlite');
 
 	/******************************************
@@ -117,6 +103,7 @@ function initialize_auth_db() {
 
 
 function enterprise_db_initialized() {
+	$error = '';
 	$dbhandle = sqlite_open('demo_enterprise_db.sqlite');
 	$sql = "select * from user_articles";
 	$query = sqlite_exec($dbhandle, $sql, $error);
@@ -131,6 +118,7 @@ function enterprise_db_initialized() {
 }
 
 function initialize_enterprise_db() {
+	$error = '';
 	$dbhandle = sqlite_open('demo_enterprise_db.sqlite');
 
 	/******************************************
@@ -168,13 +156,6 @@ function initialize_enterprise_db() {
 }
 
 
-function get_user_name() {
-	return "demo";
-}
-
-function get_user_id() {
-	return 1;
-}
 
 
 function get_recent_articles($uid) {
