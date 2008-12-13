@@ -4,10 +4,6 @@
 	//print "<h1>".$_POST['login']."</h1>";
 	//print_r($_POST);
 
-	if (!db_initialized()) {
-		initialize_db();
-	}
-
 	if ($_POST['login']) {
 		$user = $_POST['user'];
 		$pw = $_POST['password'];
@@ -27,7 +23,7 @@
 
 		print "<br/><br/>";
 
-		print "<form action='.' method='post'>";
+		print "<form action='login.php' method='post'>";
 
 		print "Username: <input type='text' name='user' value='demo'>";
 		print "<br/>";

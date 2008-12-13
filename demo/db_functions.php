@@ -1,10 +1,10 @@
 <?php
 
 function check_login($user, $pw) {
-	$dbhandle = sqlite_open('demodb.sqlite');
+	$dbhandle = sqlite_open('demo_auth_db.sqlite');
 	$real_pw = sha1($pw);
 print "<H1>|$pw|$real_pw|</h1>";
-	$sql = "SELECT * from user WHERE name='$user' AND pw='$real_pw'"; 
+	$sql = "SELECT * from user WHERE username='$user' AND pw='$real_pw'"; 
 	$res = sqlite_query($dbhandle, $sql, $error);
 
 print "<h1>$sql</h1>";
@@ -17,12 +17,12 @@ print "<h1>$sql</h1>";
         }
 }
 
-function db_initialized() {
-	$dbhandle = sqlite_open('demodb.sqlite');
+function auth_db_initialized() {
+	$dbhandle = sqlite_open('demo_auth_db.sqlite');
 	$sql = "select * from user";
 	$query = sqlite_exec($dbhandle, $sql, $error);
 	if (!$query) { 
-		echo "database not initialized: '$error'<br/><br/>\n\n";
+		echo "authentication database not initialized: '$error'<br/><br/>\n\n";
 		return false;
 	} 
 	else { 
@@ -31,8 +31,8 @@ function db_initialized() {
 	}
 }
 
-function initialize_db() {
-	$dbhandle = sqlite_open('demodb.sqlite');
+function initialize_auth_db() {
+	$dbhandle = sqlite_open('demo_auth_db.sqlite');
 
 	/******************************************
          *
@@ -42,7 +42,7 @@ function initialize_db() {
         $user_create_stmt = "
           CREATE TABLE user (
             id int auto_increment,
-            name text NOT NULL,
+            username varchar(40) NOT NULL,
             pw varchar(40) NOT NULL default '',
             realname varchar(40) NOT NULL default '',
             status char(1) NOT NULL default 'A',
@@ -105,15 +105,91 @@ function initialize_db() {
          *
 	 ******************************************/
 	$pw = sha1('demopass');
-	$user_insert_stmt = "INSERT INTO user (id, name, pw, status) 
+	$user_insert_stmt = "INSERT INTO user (id, username, pw, status) 
 			     VALUES (1, 'demo', '$pw', 'A')";
         $query = sqlite_exec($dbhandle, $user_insert_stmt, $error);
 	if (!$query) { echo "Error in user insert statement: '$error'<br/><br/>\n\n"; } 
 	else { echo "user inserted<br/><br/>\n\n"; }
-	
-	
-
-
-
 }
+
+
+
+
+
+function enterprise_db_initialized() {
+	$dbhandle = sqlite_open('demo_enterprise_db.sqlite');
+	$sql = "select * from user_articles";
+	$query = sqlite_exec($dbhandle, $sql, $error);
+	if (!$query) { 
+		echo "enterprise database not initialized: '$error'<br/><br/>\n\n";
+		return false;
+	} 
+	else { 
+		/* echo "db has been initialized<br/><br/>\n\n"; */ 
+		return true;
+	}
+}
+
+function initialize_enterprise_db() {
+	$dbhandle = sqlite_open('demo_enterprise_db.sqlite');
+
+	/******************************************
+         *
+	 * create sample data table 
+         *
+	 ******************************************/
+        $data_create_stmt = "
+          CREATE TABLE user_articles (
+            id int auto_increment,
+            user_id int NOT NULL, 
+            title text NOT NULL,
+            text text NOT NULL default '',
+            PRIMARY KEY  (id)
+          ) ";
+
+	$query = sqlite_exec($dbhandle, $data_create_stmt, $error);
+	if (!$query) { echo "Error in article create statement: '$error'<br/><br/>\n\n" . 
+                            "Does apache have write permission to the demo directory?<br/><br/>\n\n"; 
+        }
+	else { echo "article table created<br/><br/>\n\n"; }
+
+ 
+	/******************************************
+         *
+	 * insert sample article
+         *
+	 ******************************************/
+        $article_text = mysql_real_escape_string("Software as a service....");
+	$data_insert_stmt = "INSERT INTO user_articles (id, user_id, title, text) 
+			     VALUES (1, 1, 'software as a service', '$article_text')";
+        $query = sqlite_exec($dbhandle, $data_insert_stmt, $error);
+	if (!$query) { echo "Error in article insert statement: '$error'<br/><br/>\n\n"; } 
+	else { echo "article inserted<br/><br/>\n\n"; }
+}
+
+
+function get_user_name() {
+	return "demo";
+}
+
+function get_user_id() {
+	return 1;
+}
+
+
+function get_recent_articles($uid) {
+	$dbhandle = sqlite_open('demo_enterprise_db.sqlite');
+        $sql = "SELECT * FROM user_articles WHERE user_id=1";
+	$res = sqlite_query($dbhandle, $sql, $error);
+
+        $articles = array();
+        while ($entry = sqlite_fetch_array($res, SQLITE_ASSOC)) {
+          $article["title"] = $entry["title"];
+          $article["text"] = $entry["text"];
+          $articles[] = $article;
+        }
+
+	return $articles;
+}
+
 ?>
