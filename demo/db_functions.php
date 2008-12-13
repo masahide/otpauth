@@ -28,14 +28,13 @@ function db_initialized() {
 	$sql = "select * from user";
 	$query = sqlite_exec($dbhandle, $sql, $error);
 	if (!$query) { 
-		echo "database not initialized: '$error'<br/><br/>\n\n"; 
+		echo "database not initialized: '$error'<br/><br/>\n\n";
 		return false;
 	} 
 	else { 
 		/* echo "db has been initialized<br/><br/>\n\n"; */ 
 		return true;
 	}
-
 }
 
 function initialize_db() {
@@ -46,21 +45,25 @@ function initialize_db() {
 	 * create user table 
          *
 	 ******************************************/
-	$user_create_stmt = "CREATE TABLE user (
-  		id int auto_increment,
-  		name text ,
-  		pw varchar(40) default '',
-                realname varchar(32) default '', 
-  		status char(1) default 'A',
-                add_date int(11) default '0',
-                phone_number varchar(20) default '',
-                last_pw_change int(11) default '0', 
-                otp_enabled tinyint(1) default '0',
-  		PRIMARY KEY  (id)
-		) ";
+        $user_create_stmt = "
+          CREATE TABLE user (
+            id int auto_increment,
+            name text NOT NULL,
+            pw varchar(32) NOT NULL default '',
+            realname varchar(32) NOT NULL default '',
+            status char(1) NOT NULL default 'A',
+            add_date int(11) NOT NULL default '0',
+            confirm_hash varchar(32) default NULL,
+            phone_number varchar(20) NOT NULL default '',
+            last_pw_change int(11) NOT NULL default '0',
+            otp_enabled  tinyint(1) NOT NULL default '0', 
+            PRIMARY KEY  (id)
+          ) ";
 
 	$query = sqlite_exec($dbhandle, $user_create_stmt, $error);
-	if (!$query) { echo "Error in user create statement: '$error'<br/><br/>\n\n"; } 
+	if (!$query) { echo "Error in user create statement: '$error'<br/><br/>\n\n" . 
+                            "Does apache have write permission to the demo directory?<br/><br/>\n\n"; 
+        }
 	else { echo "user table created<br/><br/>\n\n"; }
 
  
@@ -104,11 +107,11 @@ function initialize_db() {
 
 	/******************************************
          *
-	 * insert lameduck user
+	 * insert demo user
          *
 	 ******************************************/
 	$pw = sha1('demopass');
-	$user_insert_stmt = "INSERT INTO user (id, user_name, user_pw, status) 
+	$user_insert_stmt = "INSERT INTO user (id, name, pw, status) 
 			     VALUES (1, 'demo', '$pw', 'A')";
         $query = sqlite_exec($dbhandle, $user_insert_stmt, $error);
 	if (!$query) { echo "Error in user insert statement: '$error'<br/><br/>\n\n"; } 
