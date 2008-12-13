@@ -1,5 +1,5 @@
 <?php
-	require_once('demodb_functions.php');
+	require_once('db_functions.php');
 
 	//print "<h1>".$_POST['login']."</h1>";
 	print_r($_POST);

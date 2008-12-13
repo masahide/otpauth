@@ -4,12 +4,14 @@ function check_login($user, $pw) {
 	$dbhandle = sqlite_open('demodb.sqlite');
 	$real_pw = sha1($pw);
 print "<H1>|$pw|$real_pw|</h1>";
-	$sql = "SELECT * from user WHERE user_name='$user' AND user_pw='$real_pw+5'"; 
+	$sql = "SELECT * from user WHERE user_name='$user' AND user_pw='$real_pw'"; 
 	$res = sqlite_query($dbhandle, $sql, $error);
 print "before res";
 print_r($res);
 while ($entry = sqlite_fetch_array($res, SQLITE_ASSOC)) {
-   echo 'Name: ' . $entry['name'] . '  E-mail: ' . $entry['email'];
+print "---------------------------\n<br/>";
+print_r($entry);
+print "---------------------------\n<br/>";
 }
 print "after res";
 	if (!$res) { 
@@ -46,9 +48,14 @@ function initialize_db() {
 	 ******************************************/
 	$user_create_stmt = "CREATE TABLE user (
   		id int auto_increment,
-  		user_name text NOT NULL,
-  		user_pw varchar(40) NOT NULL default '',
-  		status char(1) NOT NULL default 'A',
+  		name text ,
+  		pw varchar(40) default '',
+                realname varchar(32) default '', 
+  		status char(1) default 'A',
+                add_date int(11) default '0',
+                phone_number varchar(20) default '',
+                last_pw_change int(11) default '0', 
+                otp_enabled tinyint(1) default '0',
   		PRIMARY KEY  (id)
 		) ";
 
@@ -66,7 +73,9 @@ function initialize_db() {
 				user_id int(11) default '0',
 				session_hash char(32) NOT NULL default '',
 				ip_addr char(15) NOT NULL default '',
+                                otp_auth tinyint(1) NOT NULL default '0', 
 				time int(11) NOT NULL default '0',
+                                locked tinyint(1) NOT NULL default '0', 
 				PRIMARY KEY  (session_hash)
 				) ";
 
