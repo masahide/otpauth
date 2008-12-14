@@ -18,7 +18,7 @@
 	define ('__CN_OTPSIZE', 50); /* size of otp lists produced */
 	 
 	/* **************************************************************************************
-	* FUNCTION          : valid_otp 
+	* FUNCTION          : validate_otp 
 	* LAST UPDATED      : February 2005
 	* PARAMS            : 
         *  $otp               a six-word format OTP, typically from user input.
@@ -26,7 +26,7 @@
 	* DESCRIPTION       : Checks to see if the input OTP is valid based on hash of previous.
 	*
 	************************************************************************************** */
-	function valid_otp($otp) {
+	function validate_otp($otp) {
 		/* six word format */
 		if (!is_array($otp)) {
 			$otp = explode(' ', $otp);
@@ -43,7 +43,7 @@
 	}
 	 
 	/* **************************************************************************************
-	* FUNCTION          : generator()
+	* FUNCTION          : generate_otp_list()
 	* LAST UPDATED      : February 2005
 	* PARAMS            : none
 	*
@@ -51,7 +51,7 @@
         *		      in the database.
 	*
 	************************************************************************************** */
-	function generator() {
+	function generate_otp_list() {
 		$S = simplifiedInitialStep();
 		$otpList = computationStep($S, __CN_OTPSIZE);
 		$firstToBeUsed = $otpList[count($otpList)-1];
@@ -146,13 +146,14 @@
 	* PARAMS            : 
         *   $hex              a string representation of a hex number
 	*
-	* DESCRIPTION       : Takes $hex and returns an ivcs six-word form of the number
+	* DESCRIPTION       : Takes $hex and returns an ivcs word form of the number
 	*
 	************************************************************************************** */
 	function ivcs_transform_to($hex) {
 		global $ivcs;
 		 
 		$boolArr = hexString_2_booleanArray($hex);
+
 		// Convert Hex input to an array of 1's and 0's
 		$boolArr = array_merge($boolArr, rfc2289_checksum($boolArr)); // append checksum to form 66 bit array
 		 
@@ -165,6 +166,7 @@
 			// look up the code word
 		}
 		return $word;
+
 	}
 	 
 	/* **************************************************************************************
@@ -215,7 +217,8 @@
         *
 	* DESCRIPTION       : Breaks $hexstr (a hex string) into five 32-bit/4-byte values.
         *                     This is 160 bits total, and is ALWAYS the size of a sha1 hash value
-        *                     regardless of hash input. Applies folding algorithm.
+        *                     regardless of hash input. Applies folding algorithm to condense
+        *                     into 64-bit hash. 
 	*
 	************************************************************************************** */
 	function __otp_hash($hexstr) {

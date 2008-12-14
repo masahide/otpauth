@@ -3,7 +3,7 @@
 <h1>ivcs_transform_test.php</h1>
 <?php
 
-require_once('otp.php'); 
+require_once('../otp.php'); 
 
 echo "Demonstration of correct checksum (for values shown in RFC2289): <BR>";
 
