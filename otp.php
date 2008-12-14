@@ -63,7 +63,8 @@
 
 		// turn into six-word format so user 
 		// doesn't have to type a lengthy hex string
-		$otpSixWordList = convertToSixWordFormat($otpList);
+		//$otpSixWordList = convertToSixWordFormat($otpList);
+		$otpSixWordList = ivcs_transform_array_to($otpList);
 		return $otpSixWordList;
 	}
 	 
@@ -112,7 +113,7 @@
 	
  
 	/* **************************************************************************************
-	* FUNCTION          : convertToSixWordFormat()
+	* FUNCTION          : ivcs_transform_array_to()
 	* LAST UPDATED      : February 2005
 	* PARAMS            : 
         *  $otpList	      An array of OTPs of variable size
@@ -121,7 +122,7 @@
         * 		      six-word format.
 	*
 	************************************************************************************** */
-	function convertToSixWordFormat($otpList) {
+	function ivcs_transform_array_to($otpList) {
 		$len = count($otpList);
 		for($i = 0; $i < $len; $i++) {
 			$sixWord[$i] = implode(" ", ivcs_transform_to($otpList[$i]));
@@ -129,10 +130,10 @@
 			//////////////////// invertibilty integrity check ////////////////////////////////////
 			$testinverse = ivcs_transform_from(explode(" ", $sixWord[$i]));
 			if (strcmp($otpList[$i], $testinverse) != 0) {
-				test_error_log("convertToSixWordFormat : ivcs_transform not invertible");
-				test_error_log("convertToSixWordFormat : original = ".$otpList[$i].", strlen = ".strlen($otpList[$i]));
-				test_error_log("convertToSixWordFormat : transform= ".$sixWord[$i]);
-				test_error_log("convertToSixWordFormat : inverted = ".$testinverse.", strlen = ".strlen($testinverse));
+				test_error_log("ivcs_transform_array_to : ivcs_transform not invertible");
+				test_error_log("ivcs_transform_array_to : original = ".$otpList[$i].", strlen = ".strlen($otpList[$i]));
+				test_error_log("ivcs_transform_array_to : transform= ".$sixWord[$i]);
+				test_error_log("ivcs_transform_array_to : inverted = ".$testinverse.", strlen = ".strlen($testinverse));
 			}
 			////////////////////////////////////////////////////////////////////////////////////
 		}

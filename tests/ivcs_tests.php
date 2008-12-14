@@ -6,6 +6,49 @@ if (! defined('SIMPLE_TEST')) {
 require_once('otpauthHtmlReporter.class.php');
 require_once('../otp.php');
 
+
+
+
+class ivcsIntegrityCheck extends UnitTestCase {
+  function ivcsIntegrityCheck() {
+    $this->UnitTestCase("Tests ivcs dictionary and reverse arrays");
+  }
+
+  function testSizeIvcsArray() {
+
+  }
+
+  function testSizeIvcsInverseArray() {
+
+  }
+
+  function testIvcsAndReverseArrayEquivalence() {
+    //make sure $ivcs[0] = $ivcs_reverse[$ivcs[0]]
+  }
+
+  function testIvcsShortWords() {
+    //iterate through either array (or both) 
+    //test that each is a string, 
+    //uppercase, 
+    //more than 1 character, 
+    //and less than 7 characters
+  }
+
+}
+
+
+class ivcsTransformArrayToInvalidDataTest extends UnitTestCase {
+  function ivcsTransformArrayToInvalidDataTest() {
+    $this->UnitTestCase("Transform array of hashes to IVCS six-word format");
+  }
+
+//test function:
+//        function ivcs_transform_array_to($otpList) {
+
+}
+
+
+
 class ivcsTransformToInvalidDataTest extends UnitTestCase {
 
 
@@ -226,9 +269,7 @@ echo "For $counter hex values converted.<BR>";
 
 
 
-function ivcs_run_tests() {
-  $reporter = new otpauthHtmlReporter();
-
+function ivcs_run_tests(&$reporter) {
   $test = &new ivcsTransformToInvalidDataTest();
   $test->run($reporter);
  
@@ -277,7 +318,6 @@ function ivcs_run_tests() {
 }
 
 
-ivcs_run_tests();
 
 
 ?>
