@@ -74,15 +74,31 @@
 	*                     FFFFFFFFFFFF = 2.8147497671066E+14
 	*                     fffffffffffffffffffffffffFFFFFFFFFFFFFFFFFFFFFFF = 6.2771017353867E+57
 	*                     0x00 = 0
-	*                     0x0j = -1
+	*                     0x0j = false 
 	*
 	* PRECONDITION      : function is passed a string that is a hexadecimal numeric format
 	*
 	* POSTCONDITION     : function returns an integer value equivalent to the value of the 
-        *                     hex number passed in
+        *                     hex number passed in or throws exception and returns false on error
 	*
 	************************************************************************************** */
 	function hexstr2int($string) {
+		if (!is_string($string)) {
+			throw new Exception("hexstr2int(): non-string value cannot be converted to int");
+			return false;
+		}
+			
+
+		if (null==$string) {
+			throw new Exception("hexstr2int(): null value cannot be converted to int");
+			return false;
+		}
+
+		if (''==$string || strlen($string)<1) {
+			throw new Exception("hexstr2int(): empty string cannot be converted to int");
+			return false;
+		}
+
 		/* normalize string
 		1.  make it all lowercase
 		2.  strip whitespace
@@ -94,7 +110,8 @@
 		$string = trim($string);
 		$string = preg_replace("/0x/", "", $string);
 		if (!preg_match("/^[0-9a-f]+$/", $string)) {
-			return -1;
+			throw new Exception("hexstr2int(): $string is not valid hex");
+			return false;
 		}
 		 
 		/* this is a really naive algorithm
@@ -181,14 +198,35 @@
 	*
 	************************************************************************************** */
 	function binstr2int($string) {
+		if (null==$string) {
+			throw new Exception("binstr2int(): null value cannot be converted to int");
+			return false;
+		}
+
+
+		/* make sure string is a string and not an array */
 		if (is_array($string)) {
 			$string = implode('', $string);
 		}
-		/* make sure string is a string and not an array */
+
+		/* make sure string is a string at this point */
+ 		if (!is_string($string)) {
+			throw new Exception("binstr2int(): non-string cannot be converted to int");
+			return false;
+		}
+
+		/* make sure string is not empty */
+		if (''==$string || strlen($string)<1) {
+			throw new Exception("binstr2int(): empty string cannot be converted to int");
+			return false;
+		}
+
+		/* normalize string to lower */
 		$string = strtolower($string);
-		/* normalize string */
+
+		/* check for and remove 'b' notation on end of string */
 		$string = preg_replace("/b$/", "", $string);
-		/* check for and remove 'b' on end of string */
+
 		$cum = 0;
 		for ($i = strlen($string); $i > 0; $i--) {
 			$cur_chr = substr($string, $i-1, 1);
@@ -200,7 +238,9 @@
 				$cur = 1;
 				 break;
 				default:
-				return -1; /* error condition */
+					/* error condition */
+					throw new Exception("binstr2int(): string should only have '1' or '0' chars");
+					return false;
 			}
 			$pow = pow(2, strlen($string)-$i);
 			$cur = $cur * $pow;

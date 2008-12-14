@@ -11,7 +11,8 @@
 	*
 	************************************************************************************** */
 	require_once('alphanums.php');
-	require_once('iso-646.ivcs.clean.php');
+//	require_once('iso-646.ivcs.clean.php');
+	require_once('iso-646.ivcs.php');
 	require_once('nutils.php');
 	#require_once('io_interface.php'); /* this should contain i/o function */
 	 
@@ -114,28 +115,50 @@
  
 	/* **************************************************************************************
 	* FUNCTION          : ivcs_transform_array_to()
-	* LAST UPDATED      : February 2005
+	* LAST UPDATED      : December 2008 
 	* PARAMS            : 
         *  $otpList	      An array of OTPs of variable size
 	*
 	* DESCRIPTION       : This function takes an otp list and returns the same list in 
-        * 		      six-word format.
+        * 		      six-word format. Invalid otps in the list are return as nulls.
+        *
+        * UPDATE            : Added exception throwing for certain error conditions
 	*
 	************************************************************************************** */
 	function ivcs_transform_array_to($otpList) {
+                if (!is_array($otpList)) {
+      			throw new Exception("passed list is not array!");
+                        return false;
+                }
+
 		$len = count($otpList);
+                if ($len<1) { 
+      			throw new Exception("passed list is not array!");
+                        return false;
+                }
+
+                $sixWord = array();
 		for($i = 0; $i < $len; $i++) {
-			$sixWord[$i] = implode(" ", ivcs_transform_to($otpList[$i]));
+                        if (null==$otpList[$i]) {
+				$sixWord[$i] = null;
+                        } elseif (!is_string($otpList[$i])) {
+				$sixWord[$i] = null;
+                        } elseif (strlen($otpList[$i])<1) {
+				$sixWord[$i] = null;
+                        } else {
+
+				$sixWord[$i] = implode(" ", ivcs_transform_to($otpList[$i]));
 			 
-			//////////////////// invertibilty integrity check ////////////////////////////////////
-			$testinverse = ivcs_transform_from(explode(" ", $sixWord[$i]));
-			if (strcmp($otpList[$i], $testinverse) != 0) {
-				test_error_log("ivcs_transform_array_to : ivcs_transform not invertible");
-				test_error_log("ivcs_transform_array_to : original = ".$otpList[$i].", strlen = ".strlen($otpList[$i]));
-				test_error_log("ivcs_transform_array_to : transform= ".$sixWord[$i]);
-				test_error_log("ivcs_transform_array_to : inverted = ".$testinverse.", strlen = ".strlen($testinverse));
-			}
-			////////////////////////////////////////////////////////////////////////////////////
+				//////////////////// invertibilty integrity check ////////////////////////////////////
+				$testinverse = ivcs_transform_from(explode(" ", $sixWord[$i]));
+				if (strcmp($otpList[$i], $testinverse) != 0) {
+//					test_error_log("ivcs_transform_array_to : ivcs_transform not invertible");
+//					test_error_log("ivcs_transform_array_to : original = ".$otpList[$i].", strlen = ".strlen($otpList[$i]));
+//					test_error_log("ivcs_transform_array_to : transform= ".$sixWord[$i]);
+//					test_error_log("ivcs_transform_array_to : inverted = ".$testinverse.", strlen = ".strlen($testinverse));
+				}
+				////////////////////////////////////////////////////////////////////////////////////
+                	}
 		}
 		return $sixWord;
 	}
@@ -193,7 +216,7 @@
 		unsigned long versions of their
 		int values as defined by their offset
 		into $ivcs (iso-646 2048-word dictionary) */
-		array($binArray);
+ 		$binArray = array();
 		for($i = 0 ; $i < 6 ; $i++) {
 			$lutIndex = strtoupper($six_word[$i]);
 			$packedIndex = pack("L", $rev_ivcs[$lutIndex]);

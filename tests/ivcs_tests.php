@@ -4,9 +4,7 @@ if (! defined('SIMPLE_TEST')) {
 }
 
 require_once('otpauthHtmlReporter.class.php');
-require_once('../otp.php');
-
-
+require_once('../otp.php'); //otp.php includes ivcs dictionary
 
 
 class ivcsIntegrityCheck extends UnitTestCase {
@@ -15,23 +13,85 @@ class ivcsIntegrityCheck extends UnitTestCase {
   }
 
   function testSizeIvcsArray() {
+    global $ivcs;
+    $correct = false;
+    if (2048==sizeof($ivcs)) {
+      $correct = true;
+    } else {
+      $correct = false;
+    }
 
+    $this->assertTrue($correct, '$ivcs array should be 2048 in length, is '.sizeof($ivcs));
   }
 
   function testSizeIvcsInverseArray() {
+    global $rev_ivcs;
+    $correct = false;
+    if (2048==sizeof($rev_ivcs)) {
+      $correct = true;
+    } else {
+      $correct = false;
+    }
+
+    $this->assertTrue($correct, '$ivcs array should be 2048 in length, is '.sizeof($rev_ivcs));
 
   }
 
   function testIvcsAndReverseArrayEquivalence() {
-    //make sure $ivcs[0] = $ivcs_reverse[$ivcs[0]]
+    global $ivcs, $rev_ivcs;
+    $correct = true;
+    $bad_item = '';
+    $message = '$ivcs array and $rev_ivcs array should match';
+
+    foreach ($ivcs as $k=>$v) {
+      if ($k!=$rev_ivcs[$v]) {
+        $correct = false;
+        $bad_item = $v; 
+        $message .= " but $bad_item does not.";
+        $break;
+      }
+    }
+  
+    $this->assertTrue($correct, $message);
   }
 
   function testIvcsShortWords() {
-    //iterate through either array (or both) 
-    //test that each is a string, 
-    //uppercase, 
-    //more than 1 character, 
-    //and less than 7 characters
+    global $ivcs;
+    $correct = true;
+    $bad_item = '';
+    $message = '$ivcs array words should be strings from 1 to 5 chars in length';
+
+    /*
+      iterate through either array (or both) 
+      test that each is a string, 
+      uppercase, 
+      more than 1 character, 
+      and less than 7 characters
+    */
+    foreach ($ivcs as $k=>$v) {
+      if (!is_string($v)) {
+        $correct = false;
+        $bad_item = $v;
+        $message .= " but $bad_item is not";
+        $break;
+      } 
+
+      if (!(strlen($v)>0)) {
+        $correct = false;
+        $bad_item = $v;
+        $message .= " but $bad_item is not";
+        $break;
+      }
+
+      if (!(strlen($v)<6)) {
+        $correct = false;
+        $bad_item = $v;
+        $message .= " but $bad_item is not";
+        $break;
+      }
+    }
+
+    $this->assertTrue($correct, $message);
   }
 
 }
@@ -42,9 +102,121 @@ class ivcsTransformArrayToInvalidDataTest extends UnitTestCase {
     $this->UnitTestCase("Transform array of hashes to IVCS six-word format");
   }
 
-//test function:
-//        function ivcs_transform_array_to($otpList) {
+  function testEmptyArray() {
+    $otplist = array();
+    try {
+      $this->assertFalse(ivcs_transform_array_to($otplist), "Should throw exception on empty array");
+    } catch (Exception $e) {
+      $this->pass("Properly threw exception on empty array");
+    }
+  }
 
+  function testStringNotArray() {
+    $otplist = "OAF A OAR O BERG BEN";
+    try {
+      $this->assertFalse(ivcs_transform_array_to($otplist), "Should throw exception on improper data type (string)");
+    } catch (Exception $e) {
+      $this->pass("Properly threw exception on improper data type (string)");
+    }
+  }
+
+  function testIntNotArray() {
+    $otplist = 45;
+    try {
+      $this->assertFalse(ivcs_transform_array_to($otplist), "Should throw exception on improper data type (int)");
+    } catch (Exception $e) {
+      $this->pass("Properly threw exception on improper data type (int)");
+    }
+  }
+
+  function testNullNotArray() {
+    $otplist = 45;
+    try {
+      $this->assertFalse(ivcs_transform_array_to($otplist), "Should throw exception on null list");
+    } catch (Exception $e) {
+      $this->pass("Properly threw exception on null list");
+    }
+  }
+
+  function testNullArrayItem() {
+    $otplist[0]  = "ff11EE22DD33CC44";
+    $otplist[1]  = "0123456789AbcDef";
+    $otplist[2]  = "10fe32dc54ba7694";
+    $otplist[3]  = "1f11EE22DD33CC44";
+    $otplist[4]  = null;
+    $otplist[5]  = "30fe32dc54ba7694";
+    $otplist[6]  = "4f11EE22DD33CC44";
+    $otplist[7]  = "5123456789AbcDef";
+    $otplist[8]  = "60fe32dc54ba7694";
+    $otplist[9]  = "7f11EE22DD33CC44";
+    $otplist[10] = "8123456789AbcDef";
+    $otplist[11] = "90fe32dc54ba7694";
+
+    $sixword_list = ivcs_transform_array_to($otplist);
+
+    $this->assertNull($sixword_list[4], "null item in the list should return a null item at same element");
+  }
+
+ 
+  function testEmptyArrayItem() {
+    $otplist[0]  = "ff11EE22DD33CC44";
+    $otplist[1]  = "0123456789AbcDef";
+    $otplist[2]  = "10fe32dc54ba7694";
+    $otplist[3]  = "1f11EE22DD33CC44";
+    $otplist[4]  = '';
+    $otplist[5]  = "30fe32dc54ba7694";
+    $otplist[6]  = "4f11EE22DD33CC44";
+    $otplist[7]  = "5123456789AbcDef";
+    $otplist[8]  = "60fe32dc54ba7694";
+    $otplist[9]  = "7f11EE22DD33CC44";
+    $otplist[10] = "8123456789AbcDef";
+    $otplist[11] = "90fe32dc54ba7694";
+
+    $sixword_list = ivcs_transform_array_to($otplist);
+
+    $this->assertNull($sixword_list[4], "empty item in the list should return a null item at same element");
+  } 
+
+  function testNonStringArrayItem() {
+    $otplist[0]  = "ff11EE22DD33CC44";
+    $otplist[1]  = "0123456789AbcDef";
+    $otplist[2]  = "10fe32dc54ba7694";
+    $otplist[3]  = "1f11EE22DD33CC44";
+    $otplist[4]  = 45;
+    $otplist[5]  = "30fe32dc54ba7694";
+    $otplist[6]  = "4f11EE22DD33CC44";
+    $otplist[7]  = "5123456789AbcDef";
+    $otplist[8]  = "60fe32dc54ba7694";
+    $otplist[9]  = "7f11EE22DD33CC44";
+    $otplist[10] = "8123456789AbcDef";
+    $otplist[11] = "90fe32dc54ba7694";
+
+    $sixword_list = ivcs_transform_array_to($otplist);
+
+    $this->assertNull($sixword_list[4], "integer item in the list should return a null item at same element");
+  }
+
+
+  function testNonStringArrayItem2() {
+    $otplist[0]  = "ff11EE22DD33CC44";
+    $otplist[1]  = "0123456789AbcDef";
+    $otplist[2]  = "10fe32dc54ba7694";
+    $otplist[3]  = "1f11EE22DD33CC44";
+    $otplist[4]  = array();
+    $otplist[5]  = "30fe32dc54ba7694";
+    $otplist[6]  = "4f11EE22DD33CC44";
+    $otplist[7]  = "5123456789AbcDef";
+    $otplist[8]  = "60fe32dc54ba7694";
+    $otplist[9]  = "7f11EE22DD33CC44";
+    $otplist[10] = "8123456789AbcDef";
+    $otplist[11] = "90fe32dc54ba7694";
+
+    $sixword_list = ivcs_transform_array_to($otplist);
+
+    $this->assertNull($sixword_list[4], "item which is array in the list should return a null item at same element");
+  }
+
+ 
 }
 
 
@@ -71,7 +243,9 @@ class ivcsTransformToInvalidDataTest extends UnitTestCase {
   }
 
   function testToTransformWithTooShortNumber() {
-
+//    $hash = '00f';
+//    $six_word = ivcs_transform_to($hash);
+//print "<h1>$six_word</h1>";
   }
 
   function testToTransformWithTooLongNumber() {
@@ -270,6 +444,12 @@ echo "For $counter hex values converted.<BR>";
 
 
 function ivcs_run_tests(&$reporter) {
+  $test = &new ivcsIntegrityCheck();
+  $test->run($reporter);
+
+  $test = &new ivcsTransformArrayToInvalidDataTest();
+  $test->run($reporter); 
+
   $test = &new ivcsTransformToInvalidDataTest();
   $test->run($reporter);
  

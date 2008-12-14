@@ -11,7 +11,9 @@ class otpauthHtmlReporter extends HTMLReporter {
     function paintPass($message) {
         parent::paintPass($message);
         $breadcrumb = $this->getTestList();
-        print "<font color='green'>Pass: </font>".$breadcrumb[1]."<br/>";
+
+        print "<font color='green'>Pass: </font>".$breadcrumb[1]."     ".
+               "<font color='gray'>".$this->_htmlEntities($message)."</font><br/>";
     }
 
 

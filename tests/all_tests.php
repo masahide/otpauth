@@ -20,8 +20,8 @@
 
   $reporter = new otpauthHtmlReporter();
 
-  ivcs_run_tests($reporter);
   nutils_run_tests($reporter);
+  ivcs_run_tests($reporter);
   otp_run_tests($reporter);
 
 ?>

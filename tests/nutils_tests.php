@@ -25,18 +25,273 @@ class lShiftTests extends UnitTestCase {
 
 class hexstr2IntTests extends UnitTestCase {
   function hexstr2IntTests() {
-    $this->UnitTestCase("");
+    $this->UnitTestCase("Proper functionality of hexstr2int");
   }
-//        function hexstr2int($string) {
+
+  function testNullParameter() {
+    $parameter = null;
+    
+    try { 
+      $this->assertFalse(hexstr2int($parameter), "null parameter should throw exception and return false.");
+    } catch (Exception $e) {
+      $this->pass("Properly threw exception on null parameter");
+    }
+  }
+
+
+  function testEmptyParameter() {
+    $parameter = '';
+    
+    try { 
+      $this->assertFalse(hexstr2int($parameter), "empty string parameter should throw exception and return false.");
+    } catch (Exception $e) {
+      $this->pass("Properly threw exception on empty string parameter");
+    }
+  }
+
+  function testIntegerParameter() {
+    $parameter = 45;
+    
+    try { 
+      $this->assertFalse(hexstr2int($parameter), "integer parameter should throw exception and return false.");
+    } catch (Exception $e) {
+      $this->pass("Properly threw exception on integer parameter");
+    }
+  }
+
+
+  function testArrayParameter() {
+    $parameter = array();
+    $parameter[0] = "zero";
+    $parameter[1] = "one";
+    
+    try { 
+      $this->assertFalse(hexstr2int($parameter), "array parameter should throw exception and return false.");
+    } catch (Exception $e) {
+      $this->pass("Properly threw exception on array parameter");
+    }
+  }
+
+
+  function testNonHexString() {
+    $parameter = "55999ZZ";
+    try { 
+      $this->assertFalse(hexstr2int($parameter), "non-hex string parameter should throw exception and return false.");
+    } catch (Exception $e) {
+      $this->pass("Properly threw exception on non-hex string parameter");
+    }
+  }
+
+
+  function testValidHexString() {
+    $parameter = "AA9900";
+    $decval = 11180288;
+    $retval = hexstr2int($parameter);
+
+    $this->assertTrue($decval==$retval, "hex string $parameter should convert to $decval, converted to $retval");
+  }
+
+  function testValidShortHexString() {
+    $parameter = "05c";
+    $decval = 92;
+    $retval = hexstr2int($parameter);
+
+    $this->assertTrue($decval==$retval, "hex string $parameter should convert to $decval, converted to $retval");
+  }
+
+
+  function testValid8DigitHexString() {
+    $parameter = "12345678";
+    $decval = 305419896;
+    $retval = hexstr2int($parameter);
+
+    $this->assertTrue($decval==$retval, "hex string $parameter should convert to $decval, converted to $retval");
+  }
+
+
+
+  function testValid10DigitHexString() {
+    $parameter = "123456789a";
+    $decval = 78187493530;
+    $retval = hexstr2int($parameter);
+
+    $this->assertTrue($decval==$retval, "hex string $parameter should convert to $decval, converted to $retval");
+  }
+
+
+  function testValid12DigitHexString() {
+    $parameter = "123456789abc";
+    $decval = 20015998343868;
+    $retval = hexstr2int($parameter);
+    $this->assertTrue($decval==$retval, "hex string $parameter should convert to $decval, converted to $retval");
+  }
+
+
+  function testValid14DigitHexString() {
+    $parameter = "123456789abcde";
+    $decval = 5124095576030430;
+    $retval = hexstr2int($parameter);
+    $this->assertTrue($decval==$retval, "hex string $parameter should convert to $decval, converted to $retval");
+  }
+
+
+  function testValid16DigitHexString() {
+    $parameter = "123456789abcdeff";
+    $decval = 1311768467463790300;
+    $retval = hexstr2int($parameter);
+    $this->assertTrue($decval==$retval, "hex string $parameter should convert to $decval, converted to $retval");
+  }
+
+
+  function testHexStringWithLeading0x() {
+    $parameter = "0x123456789a";
+    $decval = 78187493530;
+    $retval = hexstr2int($parameter);
+    $this->assertTrue($decval==$retval, "hex string $parameter should convert to $decval, converted to $retval");
+  }
+
+  function testValid48DigitHexString() {
+    $parameter = "fffffffffffffffffffffffffFFFFFFFFFFFFFFFFFFFFFFF";
+    $decval = 6.2771017353867E+57;
+    $retval = hexstr2int($parameter);
+    $this->assertTrue($decval==$retval, "hex string $parameter should convert to $decval, converted to $retval");
+  }
+
+  function testValidHexStringWithUpperLowerAndNumeric() {
+    $parameter = "1aBcD5";
+    $decval = 1752277;
+    $retval = hexstr2int($parameter);
+    $this->assertTrue($decval==$retval, "hex string $parameter should convert to $decval, converted to $retval");
+  }
+
+
+  function testValidHexStringWithLeadingZero() {
+    $parameter = "01aBcD5";
+    $decval = 1752277;
+    $retval = hexstr2int($parameter);
+    $this->assertTrue($decval==$retval, "hex string $parameter should convert to $decval, converted to $retval");
+  }
+
+  function testValidHexStringWithTrailingZeros() {
+    $parameter = "01aBcD500";
+    $decval = 448582912;
+    $retval = hexstr2int($parameter);
+    $this->assertTrue($decval==$retval, "hex string $parameter should convert to $decval, converted to $retval");
+  }
+
 }
 
 
 class binstr2IntTests extends UnitTestCase {
   function binstr2IntTests() {
-    $this->UnitTestCase("");
+    $this->UnitTestCase("Proper functionality of binstr2int");
   }
 
-//        function binstr2int($string) {
+  function testNullParameter() {
+    $parameter = null;
+    
+    try { 
+      $this->assertFalse(binstr2int($parameter), "null parameter should throw exception and return false.");
+    } catch (Exception $e) {
+      $this->pass("Properly threw exception on null parameter");
+    }
+  }
+
+
+  function testEmptyParameter() {
+    $parameter = '';
+    
+    try { 
+      $this->assertFalse(binstr2int($parameter), "empty string parameter should throw exception and return false.");
+    } catch (Exception $e) {
+      $this->pass("Properly threw exception on empty string parameter");
+    }
+  }
+
+  function testIntegerParameter() {
+    $parameter = 45;
+    
+    try { 
+      $this->assertFalse(binstr2int($parameter), "integer parameter should throw exception and return false.");
+    } catch (Exception $e) {
+      $this->pass("Properly threw exception on integer parameter");
+    }
+  }
+
+
+  function testInvalidArrayParameter() {
+    $parameter = array();
+    $parameter[0] = "zero";
+    $parameter[1] = "one";
+    
+    try { 
+      $this->assertFalse(hexstr2int($parameter), "bad array parameters should throw exception and return false.");
+    } catch (Exception $e) {
+      $this->pass("Properly threw exception on array parameter");
+    }
+  }
+
+
+  function testNonBinString() {
+    $parameter = "55999ZZ";
+    try { 
+      $this->assertFalse(hexstr2int($parameter), "non-binary string parameter should throw exception and return false.");
+    } catch (Exception $e) {
+      $this->pass("Properly threw exception on non-binary string parameter");
+    }
+  }
+
+  function testValidBinString() {
+    $parameter = "101100";
+    $decval = 44;
+    $retval = binstr2int($parameter);
+
+    $this->assertTrue($decval==$retval, "bin string $parameter should convert to $decval, converted to $retval");
+  }
+
+
+  function testValidBinStringWithTrailingB() {
+    $parameter = "101100b";
+    $decval = 44;
+    $retval = binstr2int($parameter);
+
+    $this->assertTrue($decval==$retval, "bin string $parameter should convert to $decval, converted to $retval");
+  }
+
+  function testValidShortBinString() {
+    $parameter = "1";
+    $decval = 1;
+    $retval = binstr2int($parameter);
+
+    $this->assertTrue($decval==$retval, "bin string $parameter should convert to $decval, converted to $retval");
+  }
+
+
+  function testValid8DigitBinString() {
+  }
+
+
+  function testValid16DigitBinString() {
+  }
+
+  function testValid32DigitBinString() {
+    $parameter = "111101100010101110011010110001101";
+    $decval = 16133018;
+    $retval = binstr2int($parameter);
+
+    $this->assertTrue($decval==$retval, "bin string $parameter should convert to $decval, converted to $retval");
+  }
+
+  function testValid33DigitBinString() {
+    //should return invalid value, due to overflow
+  }
+
+  function testValidBinStringWithLeadingZero() {
+  }
+
+  function testValidBinStringWithTrailingZeros() {
+  }
+
 }
 
 
@@ -142,8 +397,54 @@ class randomBytesTests extends UnitTestCase {
 
 function nutils_run_tests(&$reporter) {
 
-//  $test = &new ivcsTransformToInvalidDataTest();
-//  $test->run($reporter);
+  $test = &new rShiftTests(); 
+  $test->run($reporter);
+
+  $test = &new lShiftTests();
+  $test->run($reporter);
+
+  $test = &new hexstr2IntTests(); 
+  $test->run($reporter);
+
+  $test = &new binstr2IntTests();
+  $test->run($reporter);
+
+  $test = &new ulong2binstrTests(); 
+  $test->run($reporter);
+
+  $test = &new ulong2hexstrTests();
+  $test->run($reporter);
+
+  $test = &new strbin2ulongTests(); 
+  $test->run($reporter);
+
+  $test = &new str2arrTests(); 
+  $test->run($reporter);
+
+  $test = &new hexString_2_booleanArrayTests(); 
+  $test->run($reporter);
+
+  $test = &new booleanArray_2_hexStringTests();
+  $test->run($reporter);
+
+  $test = &new readbit_ulongTests(); 
+  $test->run($reporter);
+
+  $test = &new writebit_ulongTests(); 
+  $test->run($reporter);
+
+  $test = &new writebit_ulong_setTests(); 
+  $test->run($reporter);
+
+  $test = &new writebit_ulong_unsetTests(); 
+  $test->run($reporter);
+
+  $test = &new randomBooleanArrayTests(); 
+  $test->run($reporter);
+
+  $test = &new randomBytesTests(); 
+  $test->run($reporter);
+
 }
 
 ?>
