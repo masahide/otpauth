@@ -152,10 +152,10 @@
 				//////////////////// invertibilty integrity check ////////////////////////////////////
 				$testinverse = ivcs_transform_from(explode(" ", $sixWord[$i]));
 				if (strcmp($otpList[$i], $testinverse) != 0) {
-//					test_error_log("ivcs_transform_array_to : ivcs_transform not invertible");
-//					test_error_log("ivcs_transform_array_to : original = ".$otpList[$i].", strlen = ".strlen($otpList[$i]));
-//					test_error_log("ivcs_transform_array_to : transform= ".$sixWord[$i]);
-//					test_error_log("ivcs_transform_array_to : inverted = ".$testinverse.", strlen = ".strlen($testinverse));
+					error_log("ivcs_transform_array_to : ivcs_transform not invertible");
+					error_log("ivcs_transform_array_to : original = ".$otpList[$i].", strlen = ".strlen($otpList[$i]));
+					error_log("ivcs_transform_array_to : transform= ".$sixWord[$i]);
+					error_log("ivcs_transform_array_to : inverted = ".$testinverse.", strlen = ".strlen($testinverse));
 				}
 				////////////////////////////////////////////////////////////////////////////////////
                 	}
