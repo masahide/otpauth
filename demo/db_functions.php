@@ -1,5 +1,35 @@
 <?php
 
+function enable_otp_on_demo_account() {
+	$error = '';
+	$dbhandle = sqlite_open('demo_auth_db.sqlite');
+	$sql = "UPDATE user SET otp_enabled=1 WHERE user_id=1";
+	$query = sqlite_exec($dbhandle, $sql, $error);
+	if (!$query) { 
+		echo "UPDATE not handled: '$error'<br/><br/>\n\n";
+		return false;
+	} 
+	else { 
+		/* echo "db has been initialized<br/><br/>\n\n"; */ 
+		return true;
+	}
+}
+
+function disable_otp_on_demo_account() {
+	$error = '';
+	$dbhandle = sqlite_open('demo_auth_db.sqlite');
+	$sql = "UPDATE user SET otp_enabled=0 WHERE id=1";
+	$query = sqlite_exec($dbhandle, $sql, $error);
+	if (!$query) { 
+		echo "UPDATE not handled: '$error'<br/><br/>\n\n";
+		return false;
+	} 
+	else { 
+		/* echo "db has been initialized<br/><br/>\n\n"; */ 
+		return true;
+	}
+}
+
 
 function auth_db_initialized() {
 	$error = '';
@@ -54,7 +84,7 @@ function initialize_auth_db() {
 	 ******************************************/
         $session_create_stmt = "CREATE TABLE session (
 				user_id int(11) default '0',
-				session_hash char(32) NOT NULL default '',
+				session_hash char(40) NOT NULL default '',
 				ip_addr char(15) NOT NULL default '',
                                 otp_auth tinyint(1) NOT NULL default '0', 
 				time int(11) NOT NULL default '0',

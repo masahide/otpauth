@@ -5,7 +5,7 @@ CREATE TABLE user (
   realname varchar(32) NOT NULL default '',
   status char(1) NOT NULL default 'A',
   add_date int(11) NOT NULL default '0',
-  confirm_hash varchar(32) default NULL,
+  confirm_hash varchar(40) default NULL,
   phone_number varchar(20) NOT NULL default '',
   last_pw_change int(11) NOT NULL default '0',
   otp_enabled  tinyint(1) NOT NULL default '0', 
@@ -15,7 +15,7 @@ CREATE TABLE user (
 
 CREATE TABLE session (
   user_id int(11) NOT NULL default '0',
-  session_hash char(32) NOT NULL default '',
+  session_hash char(40) NOT NULL default '',
   ip_addr char(15) NOT NULL default '',
   otp_auth tinyint(1) NOT NULL default '0', 
   time int(11) NOT NULL default '0',

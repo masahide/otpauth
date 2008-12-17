@@ -9,21 +9,24 @@
   /* for demo app only, make sure we've created sqlite enterprise db */
   if (!enterprise_db_initialized()) { initialize_enterprise_db(); }
 
+
+
+
+  //attempt to retrieve user session
+  $session = user_getsession();
+
+print "<h1>before session</h1>";
+print_r($session); exit();
+print "<h1>after session</h1>";
+  
   /* if user has not logged in at all, send to login page */
-  if (!user_loggedin()) {
+  if (!$session) { 
     header("Location: login.php");
     exit();
   }
 
   //retrieve user id 
   $uid = user_getid();
-
-  //attempt to retrieve user session
-  $session = user_getsession($uid);
-  
-  if (!$session) { 
-    $session = user_create_session($uid); //create session 
-  }
 
   //check to see if user is already authenticating
   //this prevents RFC 2289 specified race condition

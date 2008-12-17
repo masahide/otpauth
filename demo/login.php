@@ -6,15 +6,23 @@
   
   /* for demo app only, make sure we've created sqlite enterprise db */
   if (!enterprise_db_initialized()) { initialize_enterprise_db(); }
-
 	if ($_POST['login']) {
+
 		$user = $_POST['user'];
 		$pw = $_POST['password'];
-		if (check_login($user, $pw)) {
-			init_session($user);
-			print "<H1>LOGIN SUCCEEDED!</H1>\n<br/>";
+		$require_otp = $_POST['require_otp'];
+
+		if ($require_otp) {
+			enable_otp_on_demo_account();
+		} else {
+			disable_otp_on_demo_account();
+		}
+
+		$uid = check_login($user, $pw);
+		if ($uid) {
+			init_session($uid);
 			//redirect to requested page
-			//header("Location: index.php");
+			header("Location: index.php");
 			exit();
 		} else {
 			print "<H1>LOGIN FAILED!</H1>\n<br/>";
@@ -39,6 +47,9 @@
 		print "<br/>";
 		print "<br/>";
 		print "Password: <input type='password' name='password' value='demopass'>";
+		print "<br/>";
+		print "<br/>";
+		print "<input type='checkbox' name='require_otp'>Require OTP login";
 		print "<br/>";
 		print "<br/>";
 		print "<input type='submit' name='login' value='login'>";
