@@ -177,7 +177,8 @@ function initialize_enterprise_db() {
 	 * insert sample article
          *
 	 ******************************************/
-        $article_text = mysql_real_escape_string("Software as a service....");
+        $article_text = "Software as a service is a concept..."; 
+        //$article_text = mysql_real_escape_string("Software as a service....");
 	$data_insert_stmt = "INSERT INTO user_articles (id, user_id, title, text) 
 			     VALUES (1, 1, 'software as a service', '$article_text')";
         $query = sqlite_exec($dbhandle, $data_insert_stmt, $error);
@@ -191,10 +192,10 @@ function initialize_enterprise_db() {
 function get_recent_articles($uid) {
 	$dbhandle = sqlite_open('demo_enterprise_db.sqlite');
         $sql = "SELECT * FROM user_articles WHERE user_id=1";
-	$res = sqlite_query($dbhandle, $sql, $error);
+	$res = sqlite_query($dbhandle, $sql, SQLITE_ASSOC, $error);
 
         $articles = array();
-        while ($entry = sqlite_fetch_array($res, SQLITE_ASSOC)) {
+        while ($entry = sqlite_fetch_array($res)) {
           $article["title"] = $entry["title"];
           $article["text"] = $entry["text"];
           $articles[] = $article;

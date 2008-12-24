@@ -52,10 +52,10 @@ function user_getsession() {
 	$dbhandle = sqlite_open('demo_auth_db.sqlite');
 
         $sql = "SELECT * FROM session WHERE session_hash='$hash'";
-	$res = sqlite_query($dbhandle, $sql, $error);
+	$res = sqlite_query($dbhandle, $sql, SQLITE_ASSOC, $error);
 
         $sess = array();
-        while ($entry = sqlite_fetch_array($res, SQLITE_ASSOC)) {
+        while ($entry = sqlite_fetch_array($res)) {
           $sess["user_id"] = $entry["user_id"];
           $sess["otp_auth"] = $entry["otp_auth"];
           $sess["time"] = $entry["time"];
@@ -64,6 +64,56 @@ function user_getsession() {
 	  return $sess;
         }
 }
+
+
+
+function set_session_lock($uid) {
+	$dbhandle = sqlite_open('demo_auth_db.sqlite');
+
+	$sql = "UPDATE session SET locked=1 WHERE user_id=$uid";
+	$query = sqlite_exec($dbhandle, $sql, $error);
+	if (!$query) { 
+		echo "Cannot lock session!: '$error'<br/><br/>\n\n";
+		exit();
+	} 
+	else { 
+		/* echo "db has been initialized<br/><br/>\n\n"; */ 
+	}
+}
+
+function unset_session_lock($uid)  {
+	$dbhandle = sqlite_open('demo_auth_db.sqlite');
+
+	$sql = "UPDATE session SET locked=0 WHERE user_id=$uid";
+	$query = sqlite_exec($dbhandle, $sql, $error);
+	if (!$query) { 
+		echo "Cannot lock session!: '$error'<br/><br/>\n\n";
+		exit();
+	} 
+	else { 
+		/* echo "db has been initialized<br/><br/>\n\n"; */ 
+	}
+}
+
+
+function user_getotpauth($uid) {
+	$dbhandle = sqlite_open('demo_auth_db.sqlite');
+	$sql = "SELECT otp_enabled from user WHERE id='$uid'";
+	$res = sqlite_query($dbhandle, $sql, SQLITE_ASSOC, $error);
+
+        $sess = array();
+        $otp_auth_enabled = null;
+        while ($entry = sqlite_fetch_array($res)) {
+             $otp_auth_enabled = $res['otp_enabled'];
+        }
+
+        if (is_null($otp_auth_enabled)) {
+            /* @todo handle error condition */
+        }
+
+        return $otp_auth_enabled;
+}
+
 
 
 function check_login($user, $pw) {
@@ -80,6 +130,34 @@ function check_login($user, $pw) {
           return true;
         }
 }
+
+
+
+$locktime = false;
+function spinlock_timeout_reached() {
+  global $locktime;
+  
+  //acquire lock time if not set 
+  if (!$locktime) {
+    $locktime = time();
+  }
+
+  $curtime = time();
+
+  //release lock, return true
+  if (($curtime-$locktime)>30) {
+    $locktime = false;
+    return true;
+  } else {
+    return false; 
+  }
+
+}
+
+
+
+
+
 
 
 ?>

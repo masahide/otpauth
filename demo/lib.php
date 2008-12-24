@@ -15,10 +15,6 @@
   //attempt to retrieve user session
   $session = user_getsession();
 
-print "<h1>before session</h1>";
-print_r($session); exit();
-print "<h1>after session</h1>";
-  
   /* if user has not logged in at all, send to login page */
   if (!$session) { 
     header("Location: login.php");
@@ -26,7 +22,8 @@ print "<h1>after session</h1>";
   }
 
   //retrieve user id 
-  $uid = user_getid();
+  $uid = $session['user_id'];
+
 
   //check to see if user is already authenticating
   //this prevents RFC 2289 specified race condition
