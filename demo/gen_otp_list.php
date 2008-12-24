@@ -9,7 +9,7 @@
 	* LICENSE         : GPL
 	*
 	************************************************************************************** */
-	
+	require_once('../otp.php');	
 
  
 	/* **************************************************************************************
@@ -25,11 +25,16 @@
 	* POSTCONDITION     : function prints a list of one time passwords in a very basic html table
 	*
 	************************************************************************************** */
-	$otp_list = generator();
-	 
+	$otp_struct = generate_otp_list();
+
+	//store $otp_struct['initial']['sequence'] as first challenge to request 
+        //store $otp_struct['initial']['hash'] as starting hash value
+	
+	//present list to user 
+	header('content-type: application/vnd.ms-excel'); 
 	print "<TABLE BORDER=1>";
 	print "<TH>Sequence number</TH><TH>Password</TH>";
-	while (list($key, $val) = each($otp_list)) {
+	while (list($key, $val) = each($otp_struct['list'])) {
 		print "<TR><TD>$key</TD><TD>$val</TD></TR>";
 	}
 	print "</TABLE>";

@@ -5,11 +5,33 @@ function get_user_name() {
 }
 
 function get_user_id() {
-	return 1;
+  //attempt to retrieve user session
+  $session = user_getsession();
+  
+  //retrieve user id 
+  $uid = $session['user_id'];
+
+  return $uid;
 }
 
 function user_loggedin() {
   return false;
+}
+
+function logout($uid) {
+	$error = '';
+	$dbhandle = sqlite_open('demo_auth_db.sqlite');
+
+	//nuke old sessions for safety
+	$sql = "DELETE FROM session WHERE user_id=1";
+	$query = sqlite_exec($dbhandle, $sql, $error);
+	if (!$query) { 
+		echo "Cannot delete old sessions: '$error'<br/><br/>\n\n";
+		return false;
+	} 
+	else { 
+		/* echo "db has been initialized<br/><br/>\n\n"; */ 
+	}
 }
 
 function init_session($uid) {
@@ -131,6 +153,20 @@ function check_login($user, $pw) {
         }
 }
 
+
+function check_otplist_generated($uid) {
+	$dbhandle = sqlite_open('demo_auth_db.sqlite');
+	$sql = "SELECT * from otp WHERE user_id='$uid'";
+	$res = sqlite_query($dbhandle, $sql, SQLITE_ASSOC, $error);
+
+        $sess = array();
+        $otp_ready = null;
+        while ($entry = sqlite_fetch_array($res)) {
+             $otp_ready = true;
+        }
+
+        return $otp_ready;
+}
 
 
 $locktime = false;

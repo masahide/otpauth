@@ -6,7 +6,8 @@
   $username = get_user_name();
   $articles = get_recent_articles($uid);
 
-  print "<h1>Welcome, $username</h1>";
+  print "<h1>Welcome, $username, to the demo article page</h1>";
+  print " (<a href='logout.php'>logout</a> | <a href='settings.php'>account settings</a>)";
 
   print "<h3>Your recent articles</h3>";
 

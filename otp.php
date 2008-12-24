@@ -52,14 +52,14 @@
         *		      in the database.
 	*
 	************************************************************************************** */
-	function generate_otp_list() {
+	function generate_otp_list_and_store() {
 		$S = simplifiedInitialStep();
 		$otpList = computationStep($S, __CN_OTPSIZE);
 		$firstToBeUsed = $otpList[count($otpList)-1];
 		$initialHash = __otp_hash(sha1($firstToBeUsed));
 		 
 		// 1 indicates that the user should use OTP #1 for first access
-		store_hash(1, $initialHash);
+		//store_hash(1, $initialHash);
 		$otpList = array_reverse($otpList);
 
 		// turn into six-word format so user 
@@ -68,6 +68,38 @@
 		$otpSixWordList = ivcs_transform_array_to($otpList);
 		return $otpSixWordList;
 	}
+
+
+	/* **************************************************************************************
+	* FUNCTION          : generate_otp_list()
+	* LAST UPDATED      : February 2005
+	* PARAMS            : none
+	*
+	* DESCRIPTION       : returns a six-word format list of N OTPs, and stores the first hash
+        *		      in the database.
+	*
+	************************************************************************************** */
+	function generate_otp_list() {
+		$S = simplifiedInitialStep();
+		$otpList = computationStep($S, __CN_OTPSIZE);
+		$firstToBeUsed = $otpList[count($otpList)-1];
+		$initialHash = __otp_hash(sha1($firstToBeUsed));
+		 
+		// 1 indicates that the user should use OTP #1 for first access
+		//store_hash(1, $initialHash);
+		$initial = array();
+		$initial['sequence'] = 1;
+                $initial['hash'] = $initialHash;
+		$otpList = array_reverse($otpList);
+
+		// turn into six-word format so user 
+		// doesn't have to type a lengthy hex string
+		$retval['initial'] = $initial;
+		$retval['list'] = ivcs_transform_array_to($otpList);
+		return $retval;
+	}
+
+
 	 
 	/* **************************************************************************************
 	* FUNCTION          : simplifiedInitialStep()

@@ -12,14 +12,26 @@
 		$pw = $_POST['password'];
 		$require_otp = $_POST['require_otp'];
 
-		if ($require_otp) {
-			enable_otp_on_demo_account();
-		} else {
-			disable_otp_on_demo_account();
-		}
 
 		$uid = check_login($user, $pw);
 		if ($uid) {
+/*
+			if ($require_otp) {
+                       	 	//error if no otp's have been generated
+				$otp_ready = check_otplist_generated($uid);
+				if (!$otp_ready) {
+					print "<H1>OTP authentication cannot be enabled!</h1>";
+					print "No otp password list has been generated for this user\n<br/>";
+					print "Please login without OTP and generate a list from the 'account settings' page\n<br/><br/>";
+					print_login_page();
+					exit();
+				}
+				enable_otp_on_demo_account();
+			} else {
+				disable_otp_on_demo_account();
+			}
+*/
+
 			init_session($uid);
 			//redirect to requested page
 			header("Location: index.php");
@@ -49,7 +61,7 @@
 		print "Password: <input type='password' name='password' value='demopass'>";
 		print "<br/>";
 		print "<br/>";
-		print "<input type='checkbox' name='require_otp'>Require OTP login";
+		print "<!--<input type='checkbox' name='require_otp'>Require OTP login-->";
 		print "<br/>";
 		print "<br/>";
 		print "<input type='submit' name='login' value='login'>";
