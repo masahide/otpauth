@@ -27,6 +27,6 @@ CREATE TABLE otp (
   id int(11) NOT NULL default '0', 
   user_id int(11) NOT NULL default '0',
   sequence int(11) NOT NULL default '0',
-  otp char(60) NOT NULL default '',
+  otp char(16) NOT NULL default '',
   PRIMARY KEY  (id)
 ) TYPE=MyISAM;

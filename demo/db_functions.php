@@ -1,9 +1,10 @@
 <?php
 
-function enable_otp_on_demo_account() {
+function enable_otp_on_demo_account($uid) {
+print "<h1>inside enable_otp_on_demo_account()</h1>";
 	$error = '';
 	$dbhandle = sqlite_open('demo_auth_db.sqlite');
-	$sql = "UPDATE user SET otp_enabled=1 WHERE user_id=1";
+	$sql = "UPDATE user SET otp_enabled=1 WHERE id=$uid";
 	$query = sqlite_exec($dbhandle, $sql, $error);
 	if (!$query) { 
 		echo "UPDATE not handled: '$error'<br/><br/>\n\n";
@@ -15,10 +16,11 @@ function enable_otp_on_demo_account() {
 	}
 }
 
-function disable_otp_on_demo_account() {
+function disable_otp_on_demo_account($uid) {
+print "<h1>inside disable_otp_on_demo_account()</h1>";
 	$error = '';
 	$dbhandle = sqlite_open('demo_auth_db.sqlite');
-	$sql = "UPDATE user SET otp_enabled=0 WHERE id=1";
+	$sql = "UPDATE user SET otp_enabled=0 WHERE id=$uid";
 	$query = sqlite_exec($dbhandle, $sql, $error);
 	if (!$query) { 
 		echo "UPDATE not handled: '$error'<br/><br/>\n\n";
@@ -105,7 +107,7 @@ function initialize_auth_db() {
 				id int auto_increment, 
 				user_id int(11) NOT NULL default '0',
 				sequence int(11) NOT NULL default '0',
-				otp char(60) NOT NULL default '',
+				otp char(16) NOT NULL default '',
 				PRIMARY KEY  (id)
 				)";
 
@@ -202,6 +204,43 @@ function get_recent_articles($uid) {
         }
 
 	return $articles;
+}
+
+
+function print_all() {
+	$error = "";
+	$dbhandle = sqlite_open('demo_auth_db.sqlite');
+
+	print "<h3>user table</h3>";
+	print "<pre>";
+        $sql = "SELECT * FROM user";
+	$res = sqlite_query($dbhandle, $sql, SQLITE_ASSOC, $error);
+        while ($entry = sqlite_fetch_array($res)) {
+		print_r($entry);
+        }
+	print "</pre>";
+
+	print "<br><br>";
+
+	print "<h3>session table</h3>";
+	print "<pre>";
+        $sql = "SELECT * FROM session";
+	$res = sqlite_query($dbhandle, $sql, SQLITE_ASSOC, $error);
+        while ($entry = sqlite_fetch_array($res)) {
+		print_r($entry);
+        }
+	print "</pre>";
+
+	print "<br><br>";
+
+	print "<h3>otp table</h3>";
+	print "<pre>";
+        $sql = "SELECT * FROM otp";
+	$res = sqlite_query($dbhandle, $sql, SQLITE_ASSOC, $error);
+        while ($entry = sqlite_fetch_array($res)) {
+		print_r($entry);
+        }
+	print "</pre>";
 }
 
 ?>

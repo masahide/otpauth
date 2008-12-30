@@ -10,6 +10,7 @@
 	*
 	************************************************************************************** */
 	require_once('../otp.php');	
+        require_once('user_functions.php');
 
  
 	/* **************************************************************************************
@@ -29,13 +30,18 @@
 
 	//store $otp_struct['initial']['sequence'] as first challenge to request 
         //store $otp_struct['initial']['hash'] as starting hash value
+        store_otplist_initial($otp_struct['initial']['sequence'], $otp_struct['initial']['hash'], get_user_id());
+        
 	
 	//present list to user 
 	header('content-type: application/vnd.ms-excel'); 
+	header('content-$a: application/vnd.ms-excel'); 
+        header('Content-disposition: attachment; filename=otplist.xls');
+
 	print "<TABLE BORDER=1>";
 	print "<TH>Sequence number</TH><TH>Password</TH>";
 	while (list($key, $val) = each($otp_struct['list'])) {
-		print "<TR><TD>$key</TD><TD>$val</TD></TR>";
+		print "<TR><TD align='left'>&nbsp;&nbsp;$key</TD><TD width='100' align='left'>$val</TD></TR>";
 	}
 	print "</TABLE>";
 ?>

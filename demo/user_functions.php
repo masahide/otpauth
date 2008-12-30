@@ -82,6 +82,7 @@ function user_getsession() {
           $sess["otp_auth"] = $entry["otp_auth"];
           $sess["time"] = $entry["time"];
           $sess["locked"] = $entry["locked"];
+          $sess["session_hash"] = $entry["session_hash"];
 
 	  return $sess;
         }
@@ -126,7 +127,7 @@ function user_getotpauth($uid) {
         $sess = array();
         $otp_auth_enabled = null;
         while ($entry = sqlite_fetch_array($res)) {
-             $otp_auth_enabled = $res['otp_enabled'];
+             $otp_auth_enabled = $entry['otp_enabled'];
         }
 
         if (is_null($otp_auth_enabled)) {
@@ -191,6 +192,91 @@ function spinlock_timeout_reached() {
 }
 
 
+function store_otplist_initial($sequence, $hash, $uid) { 
+	$dbhandle = sqlite_open('demo_auth_db.sqlite');
+
+	//nuke old otp hash
+        $sql = "DELETE FROM otp where user_id='$uid'";
+	$query = sqlite_exec($dbhandle, $sql, $error);
+	if (!$query) { 
+		echo "Cannot delete old otp!: '$error'<br/><br/>\n\n";
+		exit();
+	} 
+	else { 
+		/* echo "db has been initialized<br/><br/>\n\n"; */ 
+	}
+
+	$sql = "INSERT INTO otp (user_id, sequence, otp) values ('$uid', '$sequence', '$hash')"; 
+	$query = sqlite_exec($dbhandle, $sql, $error);
+	if (!$query) { 
+		echo "Cannot delete old otp!: '$error'<br/><br/>\n\n";
+		exit();
+	} 
+	else { 
+		/* echo "db has been initialized<br/><br/>\n\n"; */ 
+	}
+
+
+}
+
+function trusted_host() { 
+  return false;
+}
+
+
+
+
+
+function get_otp_seq() {
+	/*  look at user credentials,
+	retrieve sequence number for that user,
+	and return sequence number or err out
+	*/
+	//1. Find user credentials
+	//$uid = getuid();
+	//2. Retrieve sequence number for user 
+	//$sql = "SELECT sequence FROM otp WHERE user_id='$uid'";
+	//$res = db_query($sql);
+
+	//3. Err out or return challenge number
+	if (!$res || db_numrows($res)<1) {
+
+	} else if (db_numrows($res)>1) {
+
+	} else {
+		//$row = db_fetch_array($res);
+		//return $row['sequence'];
+	}
+
+
+	$dbhandle = sqlite_open('demo_auth_db.sqlite');
+	$sql = "SELECT * from otp WHERE user_id='$uid'";
+	$res = sqlite_query($dbhandle, $sql, SQLITE_ASSOC, $error);
+
+        $sess = array();
+        $otp_ready = null;
+        while ($entry = sqlite_fetch_array($res)) {
+             $sequence = $entry['sequence'];
+        }
+
+	return $sequence;
+}
+
+
+
+function locked_for_authentication($uid, $user_session_hash) {
+	$lock_status = false;
+
+	$dbhandle = sqlite_open('demo_auth_db.sqlite');
+	$sql = "SELECT * from session WHERE user_id='$uid' AND locked=1 AND session_hash!='$user_session_hash'";
+	$res = sqlite_query($dbhandle, $sql, SQLITE_ASSOC, $error);
+
+        while ($entry = sqlite_fetch_array($res)) {
+		$lock_status = true;
+	}
+
+	return $lock_status;
+}
 
 
 

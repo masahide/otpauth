@@ -10,8 +10,6 @@
   if (!enterprise_db_initialized()) { initialize_enterprise_db(); }
 
 
-
-
   //attempt to retrieve user session
   $session = user_getsession();
 
@@ -25,9 +23,11 @@
   $uid = $session['user_id'];
 
 
+
   //check to see if user is already authenticating
   //this prevents RFC 2289 specified race condition
-  while ($session['locked']) {
+  //while ($session['locked']) {
+  while (locked_for_authentication($uid, $session['session_hash'])) {
     /* spin until lock is released or timeout happens */
     $session = user_getsession($uid);
     if (spinlock_timeout_reached()) {
@@ -35,6 +35,10 @@
       exit();
     }
   }
+
+print_all();
+print "<h1>|".locked_for_authentication($uid, $session['session_hash'])."|</h1>";
+exit();
 
   //lock account while authenticating
   set_session_lock($uid); //sets "locked" flag on session table

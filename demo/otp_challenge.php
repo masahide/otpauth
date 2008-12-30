@@ -31,8 +31,6 @@
 		<p>
 		<FORM ACTION=\"$PHP_SELF\" METHOD=\"POST\">
 		<p>
-		<INPUT TYPE=\"TEXT\" NAME=\"user\" VALUE=\"$user\">
-		<p>
 		Enter One-Time Password for Challenge number <B>".get_otp_seq()."</B>:
 		<br><INPUT TYPE=\"TEXT\" NAME=\"form_challenge_response\" VALUE=\"$form_challenge_response\" SIZE=\"31\">
 		<p>
@@ -43,42 +41,6 @@
 ?>
 <?php
 
-	/* **************************************************************************************
-	* FUNCTION          : get_otp_seq
-        *
-	* LAST UPDATED      : 17 March 2005
-        *
-	* PARAMS            : none
-	*
-	* DESCRIPTION       : retrieves the challenge number, or sequence number, that is used 
-        *                     to question the user for an OTP.
-	*
-	* PRECONDITION      : user has initialized an OTP
-	*
-	* POSTCONDITION     : function returns the challenge number or errs out
-	*
-	************************************************************************************** */
-	function get_otp_seq() {
-		/*  look at user credentials,
-		retrieve sequence number for that user,
-		and return sequence number or err out
-		*/
-		//1. Find user credentials
-		//$uid = getuid();
-		//2. Retrieve sequence number for user 
-		//$sql = "SELECT sequence FROM otp WHERE user_id='$uid'";
-		//$res = db_query($sql);
-
-		//3. Err out or return challenge number
-		if (!$res || db_numrows($res)<1) {
-
-		} else if (db_numrows($res)>1) {
-
-		} else {
-			//$row = db_fetch_array($res);
-			//return $row['sequence'];
-		}
-	}
 ?>
 <?php
 	/*

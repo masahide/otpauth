@@ -6,6 +6,8 @@
 
   $require_otp = $_POST['require_otp'];
 
+  $uid = get_user_id();
+
 
   if ($require_otp) {
     //error if no otp's have been generated
@@ -17,9 +19,9 @@
       print_settings_page();
       exit();
     }
-    enable_otp_on_demo_account();
+    enable_otp_on_demo_account($uid);
   } else {
-    disable_otp_on_demo_account();
+    disable_otp_on_demo_account($uid);
   }
 
   print_settings_page();
@@ -54,7 +56,7 @@ function print_settings_page() {
   }
   print "<br/>";
   print "<br/>";
-  print "<input type='submit' name='login' value='login'>";
+  print "<input type='submit' name='update' value='update'>";
   print "</form>";
 
 }
