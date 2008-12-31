@@ -227,28 +227,7 @@ function trusted_host() {
 
 
 
-function get_otp_seq() {
-	/*  look at user credentials,
-	retrieve sequence number for that user,
-	and return sequence number or err out
-	*/
-	//1. Find user credentials
-	//$uid = getuid();
-	//2. Retrieve sequence number for user 
-	//$sql = "SELECT sequence FROM otp WHERE user_id='$uid'";
-	//$res = db_query($sql);
-
-	//3. Err out or return challenge number
-	if (!$res || db_numrows($res)<1) {
-
-	} else if (db_numrows($res)>1) {
-
-	} else {
-		//$row = db_fetch_array($res);
-		//return $row['sequence'];
-	}
-
-
+function get_otp_seq($uid) {
 	$dbhandle = sqlite_open('demo_auth_db.sqlite');
 	$sql = "SELECT * from otp WHERE user_id='$uid'";
 	$res = sqlite_query($dbhandle, $sql, SQLITE_ASSOC, $error);

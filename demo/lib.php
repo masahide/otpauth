@@ -36,9 +36,9 @@
     }
   }
 
-print_all();
-print "<h1>|".locked_for_authentication($uid, $session['session_hash'])."|</h1>";
-exit();
+//print_all();
+//print "<h1>|".locked_for_authentication($uid, $session['session_hash'])."|</h1>";
+//exit();
 
   //lock account while authenticating
   set_session_lock($uid); //sets "locked" flag on session table

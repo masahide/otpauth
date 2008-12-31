@@ -1,4 +1,10 @@
 <?php
+
+	require_once('user_functions.php');
+	require_once('db_functions.php');
+
+	$uid = get_user_id();
+
 	/* LICENSED UNDER THE GPL */
 	###############################################################################################
 	#
@@ -6,14 +12,11 @@
 	#
 	###############################################################################################
 	if ($login) {
-		$success = valid_otp($form_challenge_response, $user);
+		$success = valid_otp($form_challenge_response, $uid);
 		if ($success) {
 			/* update session/auth state and redirect to system resources */
 		}
 	}
-	 
-	 
-	 
 	 
 	###############################################################################################
 	#
@@ -21,8 +24,10 @@
 	#
 	###############################################################################################
 	print "<HTML><HEAD><TITLE>Login</TITLE></HEAD></HTML>";
+
+	print "<a href='reset.php'>reset demo</a>";
 	 
-	$sequence = get_otp_seq();
+	$sequence = get_otp_seq($uid);
 	if ($sequence == -1) {
 		/* print error message and exit; */
 	}
@@ -31,7 +36,7 @@
 		<p>
 		<FORM ACTION=\"$PHP_SELF\" METHOD=\"POST\">
 		<p>
-		Enter One-Time Password for Challenge number <B>".get_otp_seq()."</B>:
+		Enter One-Time Password for Challenge number <B>$sequence</B>:
 		<br><INPUT TYPE=\"TEXT\" NAME=\"form_challenge_response\" VALUE=\"$form_challenge_response\" SIZE=\"31\">
 		<p>
 		<INPUT TYPE=\"SUBMIT\" NAME=\"LOGIN\" VALUE=\"Login\">

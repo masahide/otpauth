@@ -35,7 +35,6 @@
 	
 	//present list to user 
 	header('content-type: application/vnd.ms-excel'); 
-	header('content-$a: application/vnd.ms-excel'); 
         header('Content-disposition: attachment; filename=otplist.xls');
 
 	print "<TABLE BORDER=1>";

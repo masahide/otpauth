@@ -1,7 +1,6 @@
 <?php
 
 function enable_otp_on_demo_account($uid) {
-print "<h1>inside enable_otp_on_demo_account()</h1>";
 	$error = '';
 	$dbhandle = sqlite_open('demo_auth_db.sqlite');
 	$sql = "UPDATE user SET otp_enabled=1 WHERE id=$uid";
@@ -46,6 +45,36 @@ function auth_db_initialized() {
 		/* echo "db has been initialized<br/><br/>\n\n"; */ 
 		return true;
 	}
+}
+
+function destroy_auth_db() {
+	$error = '';
+	$dbhandle = sqlite_open('demo_auth_db.sqlite');
+	
+	$sql = "DROP TABLE user";
+	$query = sqlite_exec($dbhandle, $sql, $error);
+	if (!$query) { echo "Error in user drop statement: '$error'<br/><br/>\n\n"; }
+	else { echo "user table dropped<br/><br/>\n\n"; }
+
+	$sql = "DROP TABLE session";
+	$query = sqlite_exec($dbhandle, $sql, $error);
+	if (!$query) { echo "Error in session drop statement: '$error'<br/><br/>\n\n"; }
+	else { echo "session table dropped<br/><br/>\n\n"; }
+
+	$sql = "DROP TABLE otp";
+	$query = sqlite_exec($dbhandle, $sql, $error);
+	if (!$query) { echo "Error in otp drop statement: '$error'<br/><br/>\n\n"; }
+	else { echo "otp table dropped<br/><br/>\n\n"; }
+}
+
+function destroy_enterprise_db() {
+	$error = '';
+	$dbhandle = sqlite_open('demo_enterprise_db.sqlite');
+
+	$sql = "select * from user_articles";
+	$query = sqlite_exec($dbhandle, $sql, $error);
+	if (!$query) { echo "Error in user_articles drop statement: '$error'<br/><br/>\n\n"; }
+	else { echo "user_articles table dropped<br/><br/>\n\n"; }
 }
 
 function initialize_auth_db() {
