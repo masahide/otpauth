@@ -29,10 +29,11 @@
 	************************************************************************************** */
 	 
 	/* **************************************************************************************
-	* FUNCTION          : ulong2hexstr
+	* FUNCTION          : ulong2hexstr($ulong, $padLength = -1)
 	* LAST UPDATED      : 17 March 2005
 	* PARAMS            :
 	*   $ulong          : machine-packed unsigned long number
+        *   $padLength      : amount of left '0' pad to be applied (-1 is default and results in none)
 	*
 	* DESCRIPTION       : takes a packed, unsigned long number and returns a hex string
 	*                     that represents that number.
@@ -57,7 +58,7 @@
 	}
 	 
 	/* **************************************************************************************
-	* FUNCTION          : hexstr2int
+	* FUNCTION          : hexstr2int($string)
 	* LAST UPDATED      : 17 March 2005
 	* PARAMS            :
 	*   $string         : string representation of hex number
@@ -178,7 +179,7 @@
 	}
 	 
 	/* **************************************************************************************
-	* FUNCTION          : binstr2int
+	* FUNCTION          : binstr2int($string)
 	* LAST UPDATED      : 17 March 2005
 	* PARAMS            :
 	*   $string         : string or array representation of binary number
@@ -250,7 +251,7 @@
 	}
 	 
 	/* **************************************************************************************
-	* FUNCTION          : strbin2ulong
+	* FUNCTION          : strbin2ulong($value)
 	* LAST UPDATED      : 17 March 2005
 	* PARAMS            :
 	*   $value          : a string or array representation of a binary number
@@ -287,7 +288,7 @@
 	 
 	 
 	/* **************************************************************************************
-	* FUNCTION          : str2arr
+	* FUNCTION          : str2arr($string)
 	* LAST UPDATED      : 17 March 2005
 	* PARAMS            :
 	*   $string         : a string of any size or characters
@@ -315,7 +316,7 @@
 	}
 	 
 	/* **************************************************************************************
-	* FUNCTION          : readbit_ulong
+	* FUNCTION          : readbit_ulong($val, $bit)
 	* LAST UPDATED      : 17 March 2005
 	* PARAMS            :
 	*   $val            : a machine-packed, unsigned long int (32-bit/4-byte)
@@ -357,7 +358,7 @@
 	/* accepts a machine-packed, unsigned long int
 	and a bit position and a set value (either 'ON' or 'OFF').
 	/* **************************************************************************************
-	* FUNCTION          : writebit_ulong
+	* FUNCTION          : writebit_ulong($val, $bit, $set = 'ON')
 	* LAST UPDATED      : 06 December 2008
 	* PARAMS            :
 	*   $val            : a machine-packed, unsigned long int (32-bit/4-byte)
@@ -391,7 +392,7 @@
 	 
 	/* helper function for writebit_ulong - sets a bit to 1 */
 	/* **************************************************************************************
-	* FUNCTION          : writebit_ulong_set
+	* FUNCTION          : writebit_ulong_set($val, $bit)
 	* LAST UPDATED      : 17 March 2005
 	* PARAMS            :
 	*   $val            : a machine-packed, unsigned long int (32-bit/4-byte)
@@ -419,7 +420,7 @@
 	}
 	 
 	/* **************************************************************************************
-	* FUNCTION          : writebit_ulong_unset
+	* FUNCTION          : writebit_ulong_unset($val, $bit)
 	* LAST UPDATED      : 17 March 2005
 	* PARAMS            :
 	*   $val            : a machine-packed, unsigned long int (32-bit/4-byte)
@@ -448,7 +449,7 @@
 	 
 	 
 	/* **************************************************************************************
-	* FUNCTION          : ulong2binstr
+	* FUNCTION          : ulong2binstr($val)
 	* LAST UPDATED      : 17 March 2005
 	* PARAMS            :
 	*   $val            : a machine-packed, unsigned long int (32-bit/4-byte)
@@ -472,7 +473,7 @@
 	 
 	 
 	/* **************************************************************************************
-	* FUNCTION          : rshft_ulong
+	* FUNCTION          : rshft_ulong($ulong, $amount, $wrap = 0)
 	* LAST UPDATED      : 17 March 2005
 	* PARAMS            :
 	*   $ulong          : a machine-packed, unsigned long int (32-bit/4-byte)
@@ -520,7 +521,7 @@
 	 
 	 
 	/* **************************************************************************************
-	* FUNCTION          : lshft_ulong
+	* FUNCTION          : lshft_ulong($ulong, $amount, $wrap = 0)
 	* LAST UPDATED      : 17 March 2005
 	* PARAMS            :
 	*   $ulong          : a machine-packed, unsigned long int (32-bit/4-byte)
@@ -613,7 +614,7 @@
 	*/
 	 
 	/* **************************************************************************************
-	* FUNCTION          : booleanArray_2_hexString
+	* FUNCTION          : booleanArray_2_hexString($boolArr)
 	* LAST UPDATED      : 17 March 2005
 	* PARAMS            :
 	*   $boolArr        : a boolean array that represents an unsigned int 
@@ -643,7 +644,7 @@
 	
  
 	/***************************************************************************************
-	* FUNCTION          : randomBooleanArray
+	* FUNCTION          : randomBooleanArray($numBits)
 	* LAST UPDATED      : 17 March 2005
 	* PARAMS            :
 	*   $numBits        : an integer representing the amount of random data in bits 
@@ -666,7 +667,7 @@
 	}
 
 	/***************************************************************************************
-	* FUNCTION          : randomBytes
+	* FUNCTION          : randomBytes($numBits)
 	* LAST UPDATED      : 17 March 2005
 	* PARAMS            :
 	*   $numBits        : an integer representing the amount of random data in bits 
