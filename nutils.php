@@ -691,7 +691,7 @@
                 //} else {
 			//use php rand function
 		//}
-                return bytesString;
+                return $bytesString;
         }
 	 
 ?>
