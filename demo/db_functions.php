@@ -1,5 +1,38 @@
 <?php
 
+function demo_compare_last_otp($sequence, $otp, $uid) {
+	$error = '';
+	$dbhandle = sqlite_open('demo_auth_db.sqlite');
+	$sql = "select * from otp WHERE sequence='$sequence' AND otp='$otp' AND user_id='$uid'";
+print "<h1>$sql</h1>";
+	$res = sqlite_query($dbhandle, $sql, SQLITE_ASSOC, $error);
+	$found = false;
+        while ($entry = sqlite_fetch_array($res)) {
+		print_r($entry);
+		$found = true;
+        }
+	return $found;
+}
+
+function demo_set_last_otp($sequence, $otp, $uid) {
+	$error = '';
+	$dbhandle = sqlite_open('demo_auth_db.sqlite');
+	$sql = "UPDATE otp SET sequence='$sequence', otp='$otp' WHERE user_id='$uid'";
+	$query = sqlite_exec($dbhandle, $sql, $error);
+	if (!$query) { 
+		echo "UPDATE not handled: '$error'<br/><br/>\n\n";
+		return false;
+	} 
+
+	$sql = "UPDATE session SET otp_auth='1' WHERE user_id='$uid'";
+	$query = sqlite_exec($dbhandle, $sql, $error);
+	if (!$query) { 
+		echo "UPDATE not handled: '$error'<br/><br/>\n\n";
+		return false;
+	} 
+
+}
+
 function enable_otp_on_demo_account($uid) {
 	$error = '';
 	$dbhandle = sqlite_open('demo_auth_db.sqlite');
@@ -16,7 +49,6 @@ function enable_otp_on_demo_account($uid) {
 }
 
 function disable_otp_on_demo_account($uid) {
-print "<h1>inside disable_otp_on_demo_account()</h1>";
 	$error = '';
 	$dbhandle = sqlite_open('demo_auth_db.sqlite');
 	$sql = "UPDATE user SET otp_enabled=0 WHERE id=$uid";
