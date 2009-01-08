@@ -3,8 +3,6 @@
   require_once('db_functions.php');
   require_once('user_functions.php');
 
-print_all();
-
   /* for demo app only, make sure we've created sqlite auth db */
   if (!auth_db_initialized()) { initialize_auth_db(); }
   
@@ -38,9 +36,6 @@ print_all();
     }
   }
 
-//print_all();
-//print "<h1>|".locked_for_authentication($uid, $session['session_hash'])."|</h1>";
-//exit();
 
   //lock account while authenticating
   set_session_lock($uid); //sets "locked" flag on session table

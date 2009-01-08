@@ -6,7 +6,6 @@
 
 	$uid = get_user_id();
 
-print_all();
 
 	$otp = $_POST['form_challenge_response'];
         $login = $_POST['login'];

@@ -4,7 +4,6 @@ function demo_compare_last_otp($sequence, $otp, $uid) {
 	$error = '';
 	$dbhandle = sqlite_open('demo_auth_db.sqlite');
 	$sql = "select * from otp WHERE sequence='$sequence' AND otp='$otp' AND user_id='$uid'";
-print "<h1>$sql</h1>";
 	$res = sqlite_query($dbhandle, $sql, SQLITE_ASSOC, $error);
 	$found = false;
         while ($entry = sqlite_fetch_array($res)) {

@@ -90,12 +90,13 @@
 		$initial = array();
 		$initial['sequence'] = 1;
                 $initial['hash'] = $initialHash;
-		$otpList = my_array_reverse($otpList);
+		$otpList = array_reverse($otpList);
 
 		// turn into six-word format so user 
 		// doesn't have to type a lengthy hex string
 		$retval['initial'] = $initial;
 		$retval['list'] = ivcs_transform_array_to($otpList);
+		unset($retval['list'][0]);
 		return $retval;
 	}
 
@@ -332,19 +333,6 @@
 		return $checksumLSBs;
 	}
 
-	function my_array_reverse($list) { 
-		if (!is_array($list)) { 
-			return -1;
-		}
-	
-		$new_array = array();	
-		foreach ($list as $k => $v) {
-			$new_array[$v] = $k;
-		}
-
-		return $new_array;
-
-	}
 	 
 ?>
 <?php

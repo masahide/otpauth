@@ -2,8 +2,6 @@
   require_once('db_functions.php');
   require_once('user_functions.php');
 
-print_all();
-
   /* for demo app only, make sure we've created sqlite auth db */
   if (!auth_db_initialized()) { initialize_auth_db(); }
   
