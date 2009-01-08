@@ -3,25 +3,26 @@
   require_once('lib.php');
 
 
-
+  $update = $_POST['update'];
   $require_otp = $_POST['require_otp'];
 
   $uid = get_user_id();
 
-
-  if ($require_otp) {
+  if ($update) {
     //error if no otp's have been generated
-    $otp_ready = check_otplist_generated($uid);
-    if (!$otp_ready) {
-      print "<H1>OTP authentication cannot be enabled!</h1>";
-      print "No otp password list has been generated for this user\n<br/>";
-      print "Please generate a list first!\n<br/><br/>";
-      print_settings_page();
-      exit();
-    }
-    enable_otp_on_demo_account($uid);
-  } else {
-    disable_otp_on_demo_account($uid);
+    if ($require_otp) { 
+      $otp_ready = check_otplist_generated($uid);
+      if (!$otp_ready) {
+        print "<H1>OTP authentication cannot be enabled!</h1>";
+        print "No otp password list has been generated for this user\n<br/>";
+        print "Please generate a list first!\n<br/><br/>";
+        print_settings_page();
+        exit();
+      } 
+      enable_otp_on_demo_account($uid);
+    } else {
+      disable_otp_on_demo_account($uid);
+    } 
   }
 
   print_settings_page();

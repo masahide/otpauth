@@ -90,7 +90,7 @@
 		$initial = array();
 		$initial['sequence'] = 1;
                 $initial['hash'] = $initialHash;
-		$otpList = array_reverse($otpList);
+		$otpList = my_array_reverse($otpList);
 
 		// turn into six-word format so user 
 		// doesn't have to type a lengthy hex string
@@ -130,7 +130,7 @@
 	************************************************************************************** */
 	function computationStep($S, $numberOfOTPs) {
 		$hash = $S;
-		for($i = 0; $i < $numberOfOTPs; $i++) {
+		for($i = 1; $i <= $numberOfOTPs; $i++) {
 			$hash = __otp_hash(sha1($hash));
 			 
 			/////////////////////// length integrity check//////////////////////////
@@ -330,6 +330,20 @@
 		$checksumLSBs[0] = fmod((floor($checksum/2)), 2);
 		$checksumLSBs[1] = fmod($checksum, 2);
 		return $checksumLSBs;
+	}
+
+	function my_array_reverse($list) { 
+		if (!is_array($list)) { 
+			return -1;
+		}
+	
+		$new_array = array();	
+		foreach ($list as $k => $v) {
+			$new_array[$v] = $k;
+		}
+
+		return $new_array;
+
 	}
 	 
 ?>

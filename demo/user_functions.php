@@ -127,6 +127,7 @@ function user_getotpauth($uid) {
         $sess = array();
         $otp_auth_enabled = null;
         while ($entry = sqlite_fetch_array($res)) {
+print_r($entry);
              $otp_auth_enabled = $entry['otp_enabled'];
         }
 
