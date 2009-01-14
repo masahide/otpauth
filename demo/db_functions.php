@@ -7,7 +7,6 @@ function demo_compare_last_otp($sequence, $otp, $uid) {
 	$res = sqlite_query($dbhandle, $sql, SQLITE_ASSOC, $error);
 	$found = false;
         while ($entry = sqlite_fetch_array($res)) {
-		print_r($entry);
 		$found = true;
         }
 	return $found;
@@ -36,7 +35,7 @@ function enable_otp_on_demo_account($uid) {
 	$error = '';
 	$dbhandle = sqlite_open('demo_auth_db.sqlite');
 	$sql = "UPDATE user SET otp_enabled=1 WHERE id=$uid";
-	$query = sqlite_exec($dbhandle, $sql, $error);
+	$query = &sqlite_exec($dbhandle, $sql, $error);
 	if (!$query) { 
 		echo "UPDATE not handled: '$error'<br/><br/>\n\n";
 		return false;
@@ -67,9 +66,9 @@ function auth_db_initialized() {
 	$error = '';
 	$dbhandle = sqlite_open('demo_auth_db.sqlite');
 	$sql = "select * from user";
-	$query = sqlite_exec($dbhandle, $sql, $error);
+	$query = @sqlite_exec($dbhandle, $sql, $error);
 	if (!$query) { 
-		echo "authentication database not initialized: '$error'<br/><br/>\n\n";
+		/*echo "authentication database not initialized: '$error'<br/><br/>\n\n";*/
 		return false;
 	} 
 	else { 
@@ -85,17 +84,17 @@ function destroy_auth_db() {
 	$sql = "DROP TABLE user";
 	$query = sqlite_exec($dbhandle, $sql, $error);
 	if (!$query) { echo "Error in user drop statement: '$error'<br/><br/>\n\n"; }
-	else { echo "user table dropped<br/><br/>\n\n"; }
+	else { /*echo "user table dropped<br/><br/>\n\n"; */ }
 
 	$sql = "DROP TABLE session";
 	$query = sqlite_exec($dbhandle, $sql, $error);
 	if (!$query) { echo "Error in session drop statement: '$error'<br/><br/>\n\n"; }
-	else { echo "session table dropped<br/><br/>\n\n"; }
+	else { /*echo "session table dropped<br/><br/>\n\n";*/ }
 
 	$sql = "DROP TABLE otp";
 	$query = sqlite_exec($dbhandle, $sql, $error);
 	if (!$query) { echo "Error in otp drop statement: '$error'<br/><br/>\n\n"; }
-	else { echo "otp table dropped<br/><br/>\n\n"; }
+	else { /*echo "otp table dropped<br/><br/>\n\n";*/ }
 }
 
 function destroy_enterprise_db() {
@@ -105,7 +104,7 @@ function destroy_enterprise_db() {
 	$sql = "select * from user_articles";
 	$query = sqlite_exec($dbhandle, $sql, $error);
 	if (!$query) { echo "Error in user_articles drop statement: '$error'<br/><br/>\n\n"; }
-	else { echo "user_articles table dropped<br/><br/>\n\n"; }
+	else { /*echo "user_articles table dropped<br/><br/>\n\n";*/ }
 }
 
 function initialize_auth_db() {
@@ -136,7 +135,7 @@ function initialize_auth_db() {
 	if (!$query) { echo "Error in user create statement: '$error'<br/><br/>\n\n" . 
                             "Does apache have write permission to the demo directory?<br/><br/>\n\n"; 
         }
-	else { echo "user table created<br/><br/>\n\n"; }
+	else { /*echo "user table created<br/><br/>\n\n";*/ }
 
  
 	/******************************************
@@ -155,8 +154,8 @@ function initialize_auth_db() {
 				) ";
 
         $query = sqlite_exec($dbhandle, $session_create_stmt, $error);
-	if (!$query) { echo "Error in session create statement: '$error'<br/><br/>\n\n"; } 
-	else { echo "session table created<br/><br/>\n\n"; }
+	if (!$query) { /*echo "Error in session create statement: '$error'<br/><br/>\n\n"; */} 
+	else { /*echo "session table created<br/><br/>\n\n";*/ }
 
 	/******************************************
          *
@@ -173,7 +172,7 @@ function initialize_auth_db() {
 
         $query = sqlite_exec($dbhandle, $otp_create_stmt, $error);
 	if (!$query) { echo "Error in otp create statement: '$error'<br/><br/>\n\n"; } 
-	else { echo "otp table created<br/><br/>\n\n"; }
+	else { /*echo "otp table created<br/><br/>\n\n";*/ }
 
 
 
@@ -187,7 +186,7 @@ function initialize_auth_db() {
 			     VALUES (1, 'demo', '$pw', 'A')";
         $query = sqlite_exec($dbhandle, $user_insert_stmt, $error);
 	if (!$query) { echo "Error in user insert statement: '$error'<br/><br/>\n\n"; } 
-	else { echo "user inserted<br/><br/>\n\n"; }
+	else { /*echo "user inserted<br/><br/>\n\n";*/ }
 }
 
 
@@ -231,7 +230,7 @@ function initialize_enterprise_db() {
 	if (!$query) { echo "Error in article create statement: '$error'<br/><br/>\n\n" . 
                             "Does apache have write permission to the demo directory?<br/><br/>\n\n"; 
         }
-	else { echo "article table created<br/><br/>\n\n"; }
+	else { /*echo "article table created<br/><br/>\n\n";*/ }
 
  
 	/******************************************
@@ -245,7 +244,7 @@ function initialize_enterprise_db() {
 			     VALUES (1, 1, 'software as a service', '$article_text')";
         $query = sqlite_exec($dbhandle, $data_insert_stmt, $error);
 	if (!$query) { echo "Error in article insert statement: '$error'<br/><br/>\n\n"; } 
-	else { echo "article inserted<br/><br/>\n\n"; }
+	else { /*echo "article inserted<br/><br/>\n\n";*/ }
 }
 
 
