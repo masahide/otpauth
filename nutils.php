@@ -684,13 +684,16 @@
 	************************************************************************************** */
         function randomBytes($numBits) {
 		$numBytes = floor(($numBits+7)/8);
-                //if (/dev/urandom available) {
-			$fh = fopen("/dev/urandom", rb);
+		$fh = fopen("/dev/urandom", "rb");
+		if (!$fh) { 
+			$bytesString = "";
+			for ($i = 0; $i < floor(($numBits+7)/8); ++$i) {
+				$bytesString += (string) mt_rand(0, 65535);
+			}
+		} else {
 			$bytesString = fread($fh, $numBytes);
 			fclose($fh);
-                //} else {
-			//use php rand function
-		//}
+		}
                 return $bytesString;
         }
 	 

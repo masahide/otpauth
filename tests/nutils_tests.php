@@ -392,7 +392,56 @@ class randomBytesTests extends UnitTestCase {
   function randomBytesTests() {
     $this->UnitTestCase("");
   }
-//        function randomBytes($numBits) {
+
+  function testRandom1ByteIsRandom() {
+    $NUM_TESTS = 100;
+    $NUM_BITS = 16;
+
+    $randoms = array();
+    for ($i=0; $i < $NUM_TESTS; ++$i) { 
+      $randoms[] = randomBytes($NUM_BITS);
+    }
+
+    $randoms_uniq = array_unique($randoms);
+
+    $this->assertTrue(count($randoms)==count($randoms_uniq), "Randoms array count (".count($randoms).") should be equal to randoms_uniq array count (".count($randoms_uniq).").");
+  }
+
+
+
+
+  function testRandom16BytesAreRandom() {
+    $NUM_TESTS = 100;
+    $NUM_BITS = 128;
+
+    $randoms = array();
+    for ($i=0; $i < $NUM_TESTS; ++$i) { 
+      $randoms[] = randomBytes($NUM_BITS);
+    }
+
+    $randoms_uniq = array_unique($randoms);
+
+    $this->assertTrue(count($randoms)==count($randoms_uniq), "Randoms array count (".count($randoms).") should be equal to randoms_uniq array count (".count($randoms_uniq).").");
+  }
+
+  function testRandom1024BytesAreRandom() {
+    $NUM_TESTS = 100;
+    $NUM_BITS = 8192;
+
+    $randoms = array();
+    for ($i=0; $i < $NUM_TESTS; ++$i) { 
+      $randoms[] = randomBytes($NUM_BITS);
+    }
+
+    $randoms_uniq = array_unique($randoms);
+
+    $this->assertTrue(count($randoms)==count($randoms_uniq), "Randoms array count (".count($randoms).") should be equal to randoms_uniq array count (".count($randoms_uniq).").");
+  }
+
+
+
+
+
 }
 
 function nutils_run_tests(&$reporter) {

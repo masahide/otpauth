@@ -10,7 +10,22 @@ class __otp_hashTests extends UnitTestCase {
   function __otp_hashTests() {
     $this->UnitTestCase("");
   }
-//        function __otp_hash($hexstr) {
+  function testDifferentHashes() {
+    $NUM_HASHES = 50;
+    $md5s = array();
+    $sha1s = array();
+    $sha256s = array();
+
+    
+     
+
+    
+    try { 
+      $this->assertFalse(hexstr2int($parameter), "null parameter should throw exception and return false.");
+    } catch (Exception $e) {
+      $this->pass("Properly threw exception on null parameter");
+    }
+  }
 }
 
 class rfc2289_checksumTests extends UnitTestCase {

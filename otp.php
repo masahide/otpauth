@@ -16,7 +16,13 @@
 	require_once('nutils.php');
 	#require_once('io_interface.php'); /* this should contain i/o function */
 	 
-	define ('__CN_OTPSIZE', 50); /* size of otp lists produced */
+	define ('__OTPSIZE', 50); /* size of otp lists produced */
+
+	define ('__OTP_MD5', 1);
+	define ('__OTP_SHA1', 2);
+	define ('__OTP_SHA256', 3);
+	
+	define ('__OTP_HASH_FUNCTION', __OTP_SHA1);
 	 
 	/* **************************************************************************************
 	* FUNCTION          : validate_otp 
@@ -33,7 +39,7 @@
 			$otp = explode(' ', $otp);
 		}
 		$cur = ivcs_transform_from($otp);
-		$last = __otp_hash(sha1($cur));
+		$last = __otp_hash(hash_wrapper($cur));
 		$match = compare_last_otp($last);
 		if (!$match) {
 			return false;
@@ -54,9 +60,9 @@
 	************************************************************************************** */
 	function generate_otp_list_and_store() {
 		$S = simplifiedInitialStep();
-		$otpList = computationStep($S, __CN_OTPSIZE);
+		$otpList = computationStep($S, __OTPSIZE);
 		$firstToBeUsed = $otpList[count($otpList)-1];
-		$initialHash = __otp_hash(sha1($firstToBeUsed));
+		$initialHash = __otp_hash(hash_wrapper($firstToBeUsed));
 		 
 		// 1 indicates that the user should use OTP #1 for first access
 		//store_hash(1, $initialHash);
@@ -81,9 +87,9 @@
 	************************************************************************************** */
 	function generate_otp_list() {
 		$S = simplifiedInitialStep();
-		$otpList = computationStep($S, __CN_OTPSIZE);
+		$otpList = computationStep($S, __OTPSIZE);
 		$firstToBeUsed = $otpList[count($otpList)-1];
-		$initialHash = __otp_hash(sha1($firstToBeUsed));
+		$initialHash = __otp_hash(hash_wrapper($firstToBeUsed));
 		 
 		// 1 indicates that the user should use OTP #1 for first access
 		//store_hash(1, $initialHash);
@@ -113,7 +119,7 @@
 	function simplifiedInitialStep() {
 		// 8 random bytes for an initial hash
                 $S = randomBytes(64); 
-		$hash = __otp_hash(sha1($S));
+		$hash = __otp_hash(hash_wrapper($S));
 		return $S;
 	}
 
@@ -132,7 +138,7 @@
 	function computationStep($S, $numberOfOTPs) {
 		$hash = $S;
 		for($i = 1; $i <= $numberOfOTPs; $i++) {
-			$hash = __otp_hash(sha1($hash));
+			$hash = __otp_hash(hash_wrapper($hash));
 			 
 			/////////////////////// length integrity check//////////////////////////
 			if (strlen($hash) != 16) {
@@ -333,6 +339,41 @@
 		return $checksumLSBs;
 	}
 
+
+
+	/* **************************************************************************************
+	* FUNCTION          : hash_wrapper
+	* LAST UPDATED      : January 2009
+	* PARAMS            : 
+        *   $str	      String to hash           
+	*
+	* DESCRIPTION       : performs a hashing algorithm according to __OTP_HASH_FUNCTION
+        *                     and returns resultant hash
+	*
+	************************************************************************************** */
+	function hash_wrapper($str) 
+	{
+		switch(__OTP_HASH_FUNCTION) { 
+			case __OTP_MD5:
+				if (function_exists(md5)) {
+					return md5($str);
+				}
+			case __OTP_SHA1:
+				if (function_exists(sha1)) {
+					return sha1($str);
+				}
+                        case __OTP_SHA256:
+				if (function_exists(sha256)) {
+					return sha256($str);
+				}
+			default:
+				if (function_exists(sha1)) {
+					return sha1($str);
+				}
+				print "DANGER WILL ROBINSON!!!";
+				exit();
+		}
+	}
 	 
 ?>
 <?php
