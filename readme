@@ -1,19 +1,6 @@
 This is an implementation of a one-time password authentication
 system as defined by RFC 2289 in the php programming language.
 
-The following files are included:
-size		file name		description
------------------------------------------------------------------------------------
-2845		alphanums.php		alpha numeric array definition
-1534		gen_otp_list.php	script to generate html page of 50 OTP's
-86565		iso-646.ivcs.php	array definition of iso-646 2048 short word dictionary and reverse lookup table
-35556		nutils.php		various numeric utility functions 
-2227		otp_challenge.php	sample page to present to user 
-27737		otp.php			actual algorithms to do the cryptography for generating and validating OTP's 
-1729		otp_io.php	        you'll have to fill these in to do I/O and such
-11087		otp_utils_DEMO.php	this is a set of unit tests (mostly for the elemental functions in nutils.php)
-20478		random_utils.php	various random utility functions
-1577		readme			this file
 
 
 otp.php has all the top-level functions:
